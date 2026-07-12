@@ -1,0 +1,991 @@
+# Master Prompt: Build, Expand, and Polish My 2D Educational Indie Platformer
+
+the title and chracter creation screen should look like the images
+
+I am creating a **small but highly polished 2D side-scrolling educational platformer** inspired by the article below. Assume you are continuing development from an existing prototype and your task is to transform it into a complete, professional-quality indie game.
+
+**Primary Source (read carefully before making any design decisions):**
+https://substack.com/home/post/p-174486304
+
+The article is the foundation of the entire game. Use **both the article's text and images** as inspiration for:
+
+* Story
+* Characters
+* NPCs
+* Level themes
+* Environments
+* Gameplay mechanics
+* Puzzles
+* Mini-games
+* Collectibles
+* Visual storytelling
+* Educational interactions
+* Progression
+
+Do **not** simply copy the article into dialogue. Instead, convert its ideas into interactive gameplay.
+
+---
+
+# Overall Vision
+
+The game should feel like a polished indie platformer that teaches through experience rather than reading.
+
+Players should naturally learn by:
+
+* Exploring
+* Platforming
+* Talking to NPCs
+* Solving puzzles
+* Completing small tasks
+* Discovering collectibles
+* Observing environmental changes
+* Making simple choices
+* Participating in mini-games
+* Experiencing cause-and-effect scenarios
+
+The experience should always prioritize:
+
+* Fun first
+* Learning second
+
+Never overwhelm players with long paragraphs of text.
+
+Instead, deliver information through small, meaningful interactions.
+
+---
+
+# Overall Quality Goal
+
+The current project feels like a prototype.
+
+Transform it into something that feels professionally designed.
+
+The finished game should be:
+
+* Beautiful
+* Cozy
+* Charming
+* Relaxing
+* Educational
+* Interactive
+* Immersive
+* Accessible
+* Highly polished
+* Easy to understand
+* Rewarding to explore
+
+Every element should feel intentional.
+
+Nothing should appear randomly placed or unfinished.
+
+---
+
+# Art Direction
+
+Create a warm, welcoming indie aesthetic.
+
+Include:
+
+* Beautiful blue skies
+* Soft animated clouds
+* Hills
+* Trees
+* Flowers
+* Grass
+* Decorative foliage
+* Rocks
+* Wooden structures
+* Water
+* Ambient particles
+* High-quality sprites
+* Cohesive color palettes
+* Good lighting
+* Smooth animations
+* Ambient environmental movement
+
+Avoid visual clutter.
+
+Every decoration should improve the world rather than distract from gameplay.
+
+---
+
+# Gameplay
+
+The game is a **2D side-scrolling platformer**.
+
+Each level should include a balanced mix of:
+
+* Platforming
+* Exploration
+* NPC conversations
+* Educational interactions
+* Mini-games
+* Small puzzles
+* Hidden secrets
+* Collectibles
+* Environmental storytelling
+
+Avoid repetitive gameplay.
+
+Players should regularly encounter something new and interesting.
+
+---
+
+# Camera System
+
+Replace any awkward camera behavior with a polished modern side-scrolling camera.
+
+Requirements:
+
+* Smoothly follows the player
+* Comfortable horizontal scrolling
+* Free movement left and right
+* No sudden jumps
+* No awkward transitions
+* Camera movement should feel fluid and professional
+
+---
+
+# Player Guidance
+
+Players should never feel lost.
+
+Guide them using:
+
+* NPC dialogue
+* Environmental design
+* Landmarks
+* Small objective cards
+* Temporary hints
+* Speech bubbles
+* Lighting
+* Camera framing
+* Interactive objects
+
+Avoid large instructional overlays.
+
+---
+
+# UI / UX
+
+Completely modernize the interface.
+
+Requirements:
+
+* Remove the large instruction bar
+* Gameplay should always remain visible
+* Better spacing
+* Better hierarchy
+* Better typography
+* Responsive interactions
+* Smooth menu transitions
+* Light Mode and Dark Mode
+* Consistent styling across every screen
+
+Instructions should appear naturally through:
+
+* Speech bubbles
+* Small objective cards
+* Temporary contextual hints
+
+Never allow UI to block gameplay.
+
+---
+
+# Character Creation
+
+At the beginning of the game, allow players to:
+
+* Enter their name
+* Optionally customize a simple appearance
+
+This helps players connect with their character.
+
+---
+
+# Player Character
+
+Replace any placeholder artwork.
+
+The player should include:
+
+* Proper proportions
+* Two correctly positioned eyes
+* Improved facial design
+* Arms
+* Legs
+* Walking animation
+* Idle animation
+* Jump animation
+* Landing animation
+* Turning animation
+* Expressive movement
+* Better sprite quality
+
+The player should look polished and lively.
+
+### Name Tag
+
+The player's name tag currently overlaps the face.
+
+Move it slightly above the character's head.
+
+It should never cover the face or body.
+
+---
+
+# NPC System
+
+NPCs are central to the experience.
+
+Review every NPC across every level.
+
+Requirements:
+
+* No floating NPCs
+* No NPC standing on obstacle lines
+* No NPC trapped inside platforms
+* No infinite jumping
+* Natural idle animations
+* Walking when appropriate
+* Context-sensitive behavior
+
+Every NPC should feel alive.
+
+---
+
+# Professor Osei Event
+
+Currently, Professor Osei says he will race the player to the mountains, but never actually does.
+
+Redesign this sequence.
+
+Possible improvements include:
+
+* Running alongside the player
+* Occasionally getting ahead
+* Reacting during the race
+* Celebrating at the finish
+* Dynamic dialogue based on the outcome
+
+Ensure gameplay matches the dialogue.
+
+---
+
+# Environment Design
+
+Every object should serve a purpose.
+
+Remove:
+
+* Random floating decorations
+* Meaningless obstacles
+* Floating "Dry" circles
+* Random floating lines
+* Visual clutter
+
+Every object should contribute to one or more of:
+
+* Gameplay
+* Storytelling
+* Navigation
+* Beauty
+* Education
+
+The world should feel intentionally handcrafted.
+
+---
+
+# Educational Design
+
+Never present the article as long text.
+
+Transform concepts into:
+
+* Gameplay mechanics
+* NPC conversations
+* Environmental storytelling
+* Collectibles
+* Interactive events
+* Mini-games
+* Cause-and-effect systems
+* Exploration rewards
+* Optional discoveries
+
+Players should learn naturally through play.
+
+---
+
+# Audio
+
+Improve immersion with:
+
+* Ambient music
+* Environmental sounds
+* Footsteps
+* UI sounds
+* Reward sounds
+* Interaction sounds
+
+Audio should enhance exploration without becoming repetitive.
+
+---
+
+# Reward System
+
+Frequently reward curiosity.
+
+Include:
+
+* Small animations
+* Sound effects
+* Collectibles
+* Achievements
+* Visual celebrations
+* Unlockables
+
+Players should always feel encouraged to explore.
+
+---
+
+# Balloon Progression System
+
+After completing each level:
+
+Award the player one balloon.
+
+Requirements:
+
+* Balloon displays the completed level number
+* Player carries balloons throughout the game
+* Balloons stay behind the player
+* Held by a short string
+* Gentle sway physics
+* Slight drifting motion
+* Never float high above the player
+* Never block gameplay
+
+The balloons should visually represent progress.
+
+---
+
+# Collectibles
+
+Educational facts and stars currently bounce continuously.
+
+Replace with subtle idle animations.
+
+Use:
+
+* Gentle floating
+* Slow bobbing
+* Soft glow
+* Small sparkles
+
+Avoid exaggerated bouncing or constant shaking.
+
+---
+
+# Goal Marker
+
+Replace the distracting expanding circle.
+
+Instead use:
+
+* Soft glow
+* Gentle particles
+* Sparkles
+* Small highlight
+
+The goal should be noticeable without being visually overwhelming.
+
+---
+
+# Main Menu
+
+Current trees flash continuously.
+
+Replace with:
+
+* Gentle wind sway
+* Slow ambient animation
+* Static trees if necessary
+
+Avoid rapid flashing or eye-straining effects.
+
+---
+
+# Grass Animation
+
+Reduce movement significantly.
+
+Grass should gently sway like a light breeze.
+
+---
+
+# Backgrounds
+
+Current backgrounds feel generic.
+
+Redesign every environment to better reflect the article.
+
+Include:
+
+* Meaningful landmarks
+* Parallax scrolling
+* Better scenery
+* Narrative-driven environments
+* Improved color harmony
+* Higher-quality artwork
+* Environmental storytelling
+
+The world itself should teach the topic.
+
+---
+
+# Level Design
+
+Expand the game into approximately **10 unique handcrafted levels**.
+
+Do **not** duplicate existing levels.
+
+Every level should introduce something new.
+
+Examples include:
+
+* New environments
+* New mechanics
+* New platforming ideas
+* Educational interactions
+* NPC stories
+* Exploration
+* Mini-games
+* Puzzles
+* Collectibles
+* Story progression
+
+Difficulty should increase gradually.
+
+The game should remain challenging but always fair.
+
+---
+
+## Level 2
+
+Current issues:
+
+* Confusing objectives
+* Cluttered layout
+* Goal positioned underneath an obstacle
+* Player can finish without legitimately reaching the goal
+
+Fix by:
+
+* Relocating the goal correctly
+* Preventing accidental completion
+* Improving navigation
+* Removing unnecessary objects
+* Making objectives obvious through gameplay
+
+---
+
+## Level 3
+
+Current obstacle course is unfair.
+
+Problems:
+
+* Platforms are too far apart
+* Some jumps are impossible
+
+Fix by:
+
+* Bringing platforms closer
+* Ensuring every jump is possible
+* Keeping the challenge enjoyable rather than frustrating
+
+Reward skill, not luck.
+
+---
+
+# Animation Polish
+
+Review every animation in the game.
+
+Fix any distracting behavior.
+
+Examples include:
+
+* Infinite jumping
+* Constant bouncing
+* Continuous shaking
+* Excessive flashing
+* Fast repetitive motion
+
+Animations should feel smooth, subtle, and natural.
+
+---
+
+# Visual Polish
+
+Improve every aspect of presentation.
+
+Include:
+
+* Better lighting
+* Improved color harmony
+* Consistent asset quality
+* Better spacing
+* Animated backgrounds
+* Smooth scene transitions
+* Appropriate particle effects
+* Cohesive visual identity
+
+Everything should feel handcrafted.
+
+---
+
+# Technical Review
+
+Before considering the project complete, inspect the entire game.
+
+Check for:
+
+* Collision bugs
+* Incorrect level progression
+* NPC placement issues
+* Floating objects
+* UI overlap
+* Animation glitches
+* Camera problems
+* Platforming fairness
+* Collectible placement
+* Goal placement
+* Dialogue consistency
+* Audio consistency
+* Performance issues
+
+Fix any remaining problems.
+
+---
+
+# Final Goal
+
+Transform this project into a polished, complete indie educational platformer rather than a prototype.
+
+When making any design decision, always prioritize:
+
+1. Fun gameplay
+2. Clarity
+3. Smooth user experience
+4. Beautiful presentation
+5. Immersion
+6. Fair progression
+7. Natural learning through interaction
+
+The player should always know what to do without intrusive instructions, enjoy exploring every level, and finish the game having learned the article's ideas through gameplay instead of reading large blocks of text.
+
+Do not make only the requested fixes. Review the entire project holistically and improve any system that feels unfinished, inconsistent, repetitive, or unpolished while remaining faithful to the article and the overall vision.
+
+this is the article textt,
+
+Why Warm Countries Are Poorer
+The most underrated factor
+Tomas Pueyo
+Sep 25, 2025
+Today I bring you what I think is a ground-breaking article. I have never seen this theory anywhere.1 I hope you find it as exciting as I do!
+
+You can find a follow-up to this article here.
+
+Societies that live closer to the equator are warmer. Why are they also poorer?
+
+
+
+
+Source
+Here’s the average GDP per capita compared to latitude:
+
+
+
+
+Source: Tomas Pueyo for Uncharted Territories, with data from The world by latitudes: A global analysis of human population, development level and environment across the north–south axis over the past half century, Kummu & Varis, 2010
+And here’s more quantified data:
+
+
+
+
+If you look at the countries that are close to the equator and are rich, they are all clearly outliers. They’re almost all microstates. Singapore (SGP) and Hong Kong (HKG) have tons of air conditioning, GNQ (Equatorial Guinea) has plenty of oil, Seychelles (SYC), Barbados (BRB), the UAE (ARE), Puerto Rico (PRI) are all microstates too...
+The debate has raged for centuries with a racist undertone:
+
+Those who live in a cold climate are full of spirit.—Greek philosopher Aristotle, 350 BC.
+
+There are countries where the excess of heat enervates the body and renders men slothful and dispirited.—Montesquieu, The Spirit of Laws, 1750.
+
+As we will see, a lot of the more recent academic research points at worse institutions, laziness, difficulty to sweat, lack of frost, diseases…
+
+But there’s one theory that I haven’t seen anywhere yet, and that I think is crucial to explain the majority of this phenomenon. So today, I’d like to review what people think causes warm countries to be poorer, and then explain why this other factor is so crucial.
+
+Why People Think Warm Countries Are Poorer
+1. Temperature
+In Bali, me and my friends would all go into an idle state without realizing it
+
+You just sit in cafes and restaurants (most don’t have AC there) and doing nothing, just hanging around
+
+Then you’d enter an AC’d cafe (few), and after half an hour you’d wake up from standby mode
+
+You have ideas again, and ambition is back
+
+You wouldn’t even realize you get into this idle slow state but your brain goes on power save mode with the heat and you can’t even think—@levelsio
+
+There is a ton of research that supports this, actually: People are not lazier, they’re just less productive in higher temperatures.
+
+Each additional degree Celsius of temperature (+1ºC) shrinks GDP per capita by 8.5%! Temperature apparently explains 23% of the difference between countries’ GDP per capita.
+
+In poor countries, a 1ºC increase reduces growth by 1.3 percentage points.2
+
+Warmer temperatures decrease agricultural output and industrial output, and make politics unstable!
+
+Within countries, one additional degree Celsius in a municipality reduces GDP by 1.2 to 2%.
+
++1ºC above 27ºC reduces the productivity of manual labor by 4% (so +10ºC → -35% productivity!)
+
++1ºC increases absenteeism by 5%!
+
+Hot temperatures make people fail exams.3
+
+A 4ºF temperature increase led to a 10% drop in performance across tests of memory, reaction time and executive functioning.
+
+Politicians speak with lower language complexity when it’s warmer—especially older ones.
+
+Hotter temperatures cause more crime, increase hate speech online, and make traffic tenser. Air conditioning (AC) pays for itself in prisons by reducing fights.
+
+People sleep worse in warmer temperatures.
+
+As I mentioned here, AC has been a crucial tool to develop the US South, and AC is the first thing Lee Kwan Yew implemented when he founded Singapore:
+
+
+
+
+But although temperature might be linked to underdevelopment, what’s the mechanism? Does it make people lazier? Or is there something else?
+
+2. Dew Point
+This fascinating thread explains that warm regions tend to also be more humid.
+
+
+
+
+Humidity makes warm temperatures worse for a few reasons:
+
+Humidity grows mold, which is bad for health
+
+When air is warm, humidity makes it feel even warmer
+
+When humidity is 100%, the air becomes saturated and can’t take in any more, so it’s impossible for humans to cool off through sweat. The only way to cool off is by stopping physical movement.
+
+You can see how warm-climate people might seem lazy: It’s not the people; the climate makes work nearly impossible.
+
+3. Diseases
+The warmer the country is, the poorer it is, and the unhealthier it is.
+
+
+
+
+But what’s the causality? It’s clear that warmth makes countries poorer, and obviously poorer countries invest less in healthcare and so have more disease. But as we saw in Climate Caused the US Civil War, warmth also reduces health directly, because diseases like malaria, dengue, yellow fever, tuberculosis, or parasitic worms are endemic in these regions: They thrive in warm, humid environments.4
+
+Of course, sick people can’t work, and dead people can’t convey their knowledge to others, so diseases directly make countries poorer. More disease means more children die, and when they do, parents might be more interested in having more children (to diversify their risk) and invest less in each, making each person less productive.
+
+
+
+
+Malaria is most common closer to the equator. As you can see, more and more regions have been able to eliminate it, starting away from the equator and progressing towards it. Hopefully we will continue making progress against it.
+4. Frost
+Diseases thrive in warm, humid areas, but they die in frost. 5These researchers claim that frost is good to eliminate pathogens, hence the diseases they cause, with all the economic benefits this provides.
+
+5. Race
+This theory is extremely contested, and I haven’t independently assessed it, so I won’t go into any detail, but for sake of completeness we must add the hypothesis that race also has influence in economic development. I might eventually make an independent assessment of the claim.
+
+6. Historic Underdevelopment
+This theory goes something like: “Western powers colonized the rest of the world, exploiting its resources and leaving societies in the dirt, while becoming rich off of the spoils. Former colonies are still living the consequences of that.”
+
+This argument is hard to sustain, because:
+
+Some ex-colonies are much richer than others, like the US, Australia, New Zealand, etc.
+
+Some countries reacted much better to Western imperialism than others. Japan became an imperial power itself, for example. China is quite wealthy now.
+
+Some countries were not colonies but are as poor as their colonial neighbors. Ethiopia was occupied by Italy for 5 years only, never truly a colony, and yet it’s one of the poorest countries on Earth. Thailand has never been colonized, but it’s 40% poorer than neighboring Malaysia, a country that’s been a colony for most of its existence.
+
+Meanwhile, hypercolonized regions with very few Westerners are among the richest regions of the world today. Taiwan has been either a jungle or a colony (to Portugal, the Netherlands, Spain, China, and Japan) for most of its history, and yet is one of the richest countries today. Singapore and Hong Kong are very similar: close to the equator, very hot, very few Europeans moved there, yet super rich.
+
+I prefer mechanisms where you can trace the causation more directly, like crops.
+
+7. Crops
+We saw this in detail in Climate Caused the US Civil War: Cash crops only grow in the South but require tons of work, so this gave rise to slavery. This locked the South in a much less productive path than the North: Much more investment in slaves, less investment in capital, and the emergence of extractive institutions that were hard to replace with better ones.
+
+8. Institutions
+The generalization of this argument for the entire world is:
+
+Countries closer to the equator are naturally bountiful
+
+Therefore, they develop extractive institutions, which focus on exploiting people to extract valuable things like cash crops, oil, and minerals.
+
+To add to the problem, these resources inject so much cash into the economy that all prices rise, making other industries too expensive to develop any kind of exports, so other industries wither. These two effects are called the resource curse.6
+
+It’s obvious that institutions matter, like in North Korea vs South Korea, or Haiti vs the Dominican Republic. In both cases, the pairs share the same geography but diverged in institutions for random historic reasons, and the economic differences in outcomes are staggering.
+
+And of course, Europeans colonized many warm countries and left poor institutions behind. It’s easy to see how these can have kept the countries poor.
+
+But the outliers we mentioned before are still valid: The institutions in hypercolonized Australia, New Zealand, Singapore, Hong Kong, and Taiwan are world-class, whereas those in never-colonized Ethiopia and Thailand are bad.7
+
+Also, one of the premises sounds completely off: Are countries closer to the equator actually more bountiful?
+
+Countries close to the equator have famously poor soils, leached by constant rains. The Amazon is impossible to turn into farmland, as are the islands of Borneo and Sumatra. Java is only productive because of volcanoes.
+
+A bit farther from the equator, you find the horse latitudes, which are so dry they create the biggest deserts in the world across every continent.
+
+
+
+
+Meanwhile, the supposedly poorly-endowed US, Canada, China, and Australia are some of the biggest mining countries in the world, and have been for some time.
+
+The US, Canada, Russia, and Norway are some of the biggest producers and exporters of oil and gas.
+
+The US, the Netherlands, Germany and France are the top 4 agricultural exporters in the world.
+
+
+
+
+Acemoglu, Johnson and Robinson (AJR) won a Nobel Prize for proposing a mechanism by which warmer countries could have ended up with worse institutions, which goes back to disease: White people died in warm climates, so they couldn’t send people to properly colonize and develop countries around the equator, so they didn’t care about their development at all, and instead ruled through intermediaries to extract as many resources as possible.
+
+Except Glazer et. al (2004) showed that the difference could simply have been that Europe sent more Europeans to temperate colonies, and their presence made the difference. This could be interpreted as racialism, but there are non-racialist interpretations, like “Europeans simply could transfer institutions more efficiently because they knew them better and knew how they are supposed to work” (a bit like how I believe Americans coming to Europe are more productive than native Europeans today), or “Europeans in the colonies traded more with Europe”. This counter-argument is so strong that the Nobel committee had to caveat their prize.
+
+There are more holes to this theory, such as:
+
+The Scramble for Africa only started in the late 1800s… Because quinine was discovered then and White people subsequently died much less from malaria! Funnily, AJR use Western mortality rates from before Europe actually colonized Africa! By the time Europe was forming African institutions, the mortality rates they used didn’t apply.8
+
+AJR use mortality rates as proxies for institution quality, but mortality rates can also have impacts in other ways, like simply worse health.
+
+They only compare countries with each other, but there aren’t that many countries to compare!9
+
+Plenty of Spaniards settled in Mexico and Colombia 500 years ago, because tropical diseases are much weaker in the highlands, which is where Westerners actually settled. So White Europeans did settle some tropical countries, and yet they supposedly didn’t bring their great institutions.10
+
+More importantly, even if this theory were right, we would be left with this causality:
+Bad climate → disease → no Western settlers → bad institutions
+Which means the root cause is still geographic.
+
+If you summarize all these theories, this is what you get:
+
+
+
+
+But if you take a step back, isn’t this all so weird? Didn’t humans evolve in Africa? Then how come we’re so maladapted to Africa? How can we not be adapted to the environment we evolved in?
+
+Here’s the kicker—I’m so excited about writing this, I have a huge grin on my face right now: We did not evolve in such warm places, and humans in warm countries don’t live where you think they live!
+
+Here are the temperatures of Nairobi (Kenya’s capital) and Lisbon (Portugal’s):
+
+
+
+
+Lisbon, the capital of the first global empire of the West, actually gets warmer than Nairobi! Nairobi’s temperature is not that high, and is quite stable throughout the year. Look at Mexico’s capital, or Colombia’s capital. Look at La Paz.
+
+
+
+
+Teal: capitals of ex-colonies. Sand: capitals of ex-empires
+The average temperature in many capitals of poor or middle-income countries is not that different from that of some Western countries. Ethiopia’s Addis Ababa is colder than Lisbon, Bogotá is colder than Madrid.
+
+How come? Here’s a map of Italy’s topography and Italy at night. Notice where people live.
+
+
+
+
+In Italy, every single available plain has population
+Now here’s a map of Colombia’s topography.
+
+
+
+
+Can you guess where people live?
+
+
+
+
+Colombia’s population density vs topography
+Mountains
+The vast majority of Colombians live in the mountains! More specifically, in the high plateaus. It’s the exact opposite of Italy—and most temperate regions.
+
+The answer is obvious when you think about it: The higher you are, the cooler the temperature. Normally, temperatures decrease by ~4–9ºC every 1000 meters higher (2 to 5 °F/1000 ft). Since Bogotá is at 2,600 m of altitude (8600 ft), its annual temperature is 14ºC (25ºF) cooler than Barranquilla, which is farther north from the equator but at sea level, on the coast.
+
+Bogotá was created far inland in the mountains in 1538, only a few decades after the Spanish discovery of America. The colonizers had a much harder time with disease and conflict in coastal flatlands. It was worth traveling hundreds of miles inland and up thousands of meters to survive. That region is agriculturally much better than the sea-level flatlands too, because of the same lack of disease and the soil that doesn’t get leached as much. This logic is true of all three main Colombian cities: Bogotá (12.7M people), Medellín (4.4M) and Cali (4.2M) are all in the mountains.
+
+
+
+
+We’ve already seen the same phenomenon in Mexico:
+
+
+
+
+Arguably, civilization would have had a much harder time developing in the Americas if the land had been much flatter and low-lying. It’s not a coincidence that the Incan Empire was a mountain empire and was the only independent one in the world to form on the equator!
+
+
+
+
+The Incan Empire was basically the Andes.
+Even today, the Latin American population concentrates in the Andes!
+
+
+
+
+Look at the string of mountains and people to the west
+It is not just LatAm though. Here’s Africa:
+
+
+
+
+Africa has four population centers. The northwest is the Atlas Mountains, which traverse Morocco, Algeria, and Tunisia, and most of their population lives against the mountains. In Egypt, people live along the Nile. In West Africa, people live relatively close to sea level. But the biggest population center is the Rift Valley that goes from Ethiopia to the east, to eastern South Africa
+Here’s a zoom in on Ethiopia, the 2nd most populated country in Africa:
+
+
+
+
+Here’s Iran:
+
+
+
+
+The pattern is much weaker in East and South Asia:
+
+
+
+
+Southern China and India are both mountainous and densely inhabited, but the vast majority of people live close to sea level, on the valleys of the rivers Indus, Ganges, Irrawaddy, Chao Phraya, Mekong, Red, Yangtze, and Yellow Rivers. We’ll talk about why the pattern is weaker in Asia later. Authors: @cstats1 for the topography, @PythonMaps for the population density
+But if you look at the altitude and distance from the equator of the capitals of the world, a clear pattern emerges:
+
+
+
+
+Source: Tomas Pueyo, based on data from Wikipedia
+A big percentage of equatorial population actually lives in mountains:
+
+The closer to the equator, the higher up the capitals! The highest capital of a developed country, Jerusalem, is just 750 m (2,100 ft) above sea level. Meanwhile, capitals of poor countries are very frequently above 1000 m.11
+
+Higher altitude also means less humidity.
+
+
+
+
+Notice how there is much less water vapor in the air in mountainous areas than close to sea level. This other dew point map is not as pretty, but shows directly how the dew point is lower in mountains.
+
+So in tropical areas, sweat doesn’t work to cool skin on sea-level plains but still works in the mountains.
+
+So the trend is clear that, closer to the equator, people tend to live in higher altitudes. What are the consequences of that? If you follow Uncharted Territories, you should already have a sense.
+
+Transportation
+Mountains mean people need to travel up and down mountain passes and huge slopes to get anywhere. They mean no navigable rivers. They mean much higher costs of infrastructure, so there’s much less of it. This means transportation costs are much higher.
+
+Trade
+This, in turn, means there’s dramatically less trade, and so less money is made, and less wealth accumulated. We’ve seen how these facts have dramatically impoverished countries like Mexico and Brazil, and the generic process in A Science of Cities.
+
+Balkanization
+The other thing that happens with mountains is conflict. As transportation costs are so much higher, people don’t move as much from their valley. There’s substantially less regional integration, and people trust and like each other less. They develop their own independent customs and mistrust those of their neighbors. This leads to more conflict between valleys, regions, and countries.
+
+This process is called Balkanization, for the mountainous Balkans in Europe. But we also see it in Mexico’s and Colombia’s cartels—in fact, nearly all cartels in Latin America are in the mountains. We saw it in Iran, a highly mountainous country that requires a very strong state suppressing dissent to keep the country together. It is extremely obvious in Africa:
+
+
+
+
+Brown dots are conflict events. In the vast majority of cases, ethnic conflict in Africa happens on mountains. This is obvious in Ethiopia and the rest of the Rift Valley (the mountain range that goes from east to south), Angola, Mozambique, Congo, Sudan, and Algeria. There are outliers (mountains don’t explain all conflict), but the pattern is unmistakable.
+And… where did humans evolve?
+
+
+
+
+If you enjoy this theory, subscribe to get many more fresh and insightful perspectives on how the world really works
+
+iseedeadpeople3786@gmail.com
+password
+iseedeadpeople3786@gmail.com
+Subscribe
+
+Takeaways
+The pattern, and its logic, is unmistakable:
+
+Humans evolved in the African highlands, where temperatures are stable throughout the year, and close to that of spring & fall in temperate regions. This is why we feel most comfortable there.
+
+Close to the equator, if we’re not in the mountains, the temperatures are too high for us. We can’t think or work properly because we overheat, and our sweat can’t cool us off because humidity is too high.
+
+We also suffer from many more diseases, more common in hot moist climates, but also because we didn’t evolve there.
+
+This also affects food, as agriculture is much harder in these hot moist climates, given the pests, the speed of rot, and the work required by crops.
+
+This prevented maladapted Westerners from efficiently transferring culture and institutions to these hot, humid, low-lying areas, yet another way these regions suffered.
+
+In order to avoid all that, people close to the equator tend to live higher up, in mountains, where temperatures are cooler and the dew point is lower, allowing people to cool down with sweat when necessary.
+
+The big tradeoff for this comfort though has been much higher transportation costs, so less trade, so less wealth.
+
+This also leads to much more ethnic diversity.
+
+This diversity breeds conflict, which makes everybody poorer.
+
+Ethnic diversity and conflict also mean institutions are much harder to make and keep.
+
+This is how mountains are the most significant underdiscussed topic in economic development, and how they must be considered to better explain why warmer countries are poorer.
+
+
+
+
+So people in warm countries could pick their poison: Either be on the lowlands with lower productivity and more disease, or move to highlands with less trade and more conflict. Most of LatAm and a big chunk of Africa gravitated towards the highlands type of poverty, while East and South Asia gravitated towards the lowlands type.
+
+This is also why one of the most important inventions in the history of alleviating poverty is air conditioning, and why all low-lying warm countries should obsess about solar energy and electrification, to power AC to increase productivity and reduce diseases.12
+
+Why does all this matter though?
+
+Because I’m tired of worthless debates like who is guilty of poor countries’ misfortunes? where one side claims “Oh the Western colonizers caused all the problems” and the other argues “Actually, the colonizers saved shithole countries from their shit”. Neither are useful because they’re not actionable. They focus on blame rather than on analyzing the root cause that we can do something about. If it’s true that mountains have had such a major impact on poor countries’ poverty, that clearly points at a path for their development:
+
+In low-lying areas: Populate them with more AC and focus on eradicating diseases, especially via the elimination of mosquitoes and stagnant water.
+
+In mountainous areas: Invest heavily in transportation infrastructure.
+
+I hope you enjoyed this theory! If you think this article was insightful, share it with people who might enjoy enriching their conversations about inequality and global development.
+
+Share
+
+1
+I asked ChatGPT and Grok about it and they agreed. I will share the links later so as not to spoil this for you!
+
+2
+This is huge! If your country grows at 3% per year and one year the average temperatures are 2ºC higher, growth will fall to 0.4%, or 85% less growth!
+
+3
+“Hot temperature reduces performance by up to 13 percent of a standard deviation and leads to persistent impacts on high school graduation status, despite compensatory responses by teachers, who selectively upward manipulate grades after hotter exams.”
+
+4
+Even this has an indirect relationship with economics, as rich countries have been able to eradicate malaria in a way that poor countries have not, because these diseases are easier to eliminate in colder climates, and with higher investments.
+
+5
+Diseases that spread in cold temperatures don’t do so because they thrive in the cold (they don’t, they die). Rather, they thrive in humans’ lungs, throats and mouths, and love the indoors. So when it’s cold, people stay indoors, and spread the virus from respiratory system to respiratory system. That’s why they’re called “cold” when they don’t like it.
+
+6
+Or Dutch Disease, after the Dutch discovered natural gas in the 1970s and the economy suffered from it. Spain is also a perfect example, where the vast sums of silver from America might have completely destroyed its industries for centuries.
+
+7
+I’ve also heard some countries inherited reasonably good institutions, like Namibia from Germany, but I haven’t looked at it independently in any detail.
+
+8
+Also, these mortality rates were linked to military campaigns, not civilian settlement. Many of the observations were from just one instance.
+
+9
+They used about 60, and the max I’ve seen is about 140. This is a fair share of countries (~196) but there are just so few countries in the world that it makes it hard to reach significance just comparing countries.
+
+10
+At this point, AJR argue that Spanish institutions were just not great to begin with, and explain how they just replaced extractive institutions that existed before they arrived. But then why were Spanish institutions so bad compared to English ones? And why did the English ones suddenly become bad institutions in the South of the US but not in its North?
+
+11
+Ulaanbaatar, in Mongolia, is extremely high for its latitude, which is why it’s the coldest capital on Earth. La Vella, the capital of Andorra, is higher than Jerusalem or Madrid, but Andorra is a microcountry that is only rich because it’s nested between France and Spain.
+
+12
+As promised, here is what ChatGPT and Grok said about the novelty of this theory.
+
