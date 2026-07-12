@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(python3)",
+      "Bash(grep -n \"^  {$\" game/chapters.ts)",
+      "Bash(awk '/^  \\\\{$/{start=1; chapter=\"\"} start && /id:/{match\\($0, /id: \\([0-9]+\\)/, arr\\); chapter=arr[1]; print \"Chapter \" chapter} /^  \\\\},?$/{if\\(start\\) {print \"---\"; start=0}}' game/chapters.ts)"
+    ]
+  }
+}

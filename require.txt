@@ -1,0 +1,591 @@
+# Master Prompt: Build, Expand, and Polish My 2D Educational Indie Platformer
+
+the title and chracter creation screen should look like the images
+
+I am creating a **small but highly polished 2D side-scrolling educational platformer** inspired by the article below. Assume you are continuing development from an existing prototype and your task is to transform it into a complete, professional-quality indie game.
+
+**Primary Source (read carefully before making any design decisions):**
+https://substack.com/home/post/p-174486304
+
+The article is the foundation of the entire game. Use **both the article's text and images** as inspiration for:
+
+* Story
+* Characters
+* NPCs
+* Level themes
+* Environments
+* Gameplay mechanics
+* Puzzles
+* Mini-games
+* Collectibles
+* Visual storytelling
+* Educational interactions
+* Progression
+
+Do **not** simply copy the article into dialogue. Instead, convert its ideas into interactive gameplay.
+
+---
+
+# Overall Vision
+
+The game should feel like a polished indie platformer that teaches through experience rather than reading.
+
+Players should naturally learn by:
+
+* Exploring
+* Platforming
+* Talking to NPCs
+* Solving puzzles
+* Completing small tasks
+* Discovering collectibles
+* Observing environmental changes
+* Making simple choices
+* Participating in mini-games
+* Experiencing cause-and-effect scenarios
+
+The experience should always prioritize:
+
+* Fun first
+* Learning second
+
+Never overwhelm players with long paragraphs of text.
+
+Instead, deliver information through small, meaningful interactions.
+
+---
+
+# Overall Quality Goal
+
+The current project feels like a prototype.
+
+Transform it into something that feels professionally designed.
+
+The finished game should be:
+
+* Beautiful
+* Cozy
+* Charming
+* Relaxing
+* Educational
+* Interactive
+* Immersive
+* Accessible
+* Highly polished
+* Easy to understand
+* Rewarding to explore
+
+Every element should feel intentional.
+
+Nothing should appear randomly placed or unfinished.
+
+---
+
+# Art Direction
+
+Create a warm, welcoming indie aesthetic.
+
+Include:
+
+* Beautiful blue skies
+* Soft animated clouds
+* Hills
+* Trees
+* Flowers
+* Grass
+* Decorative foliage
+* Rocks
+* Wooden structures
+* Water
+* Ambient particles
+* High-quality sprites
+* Cohesive color palettes
+* Good lighting
+* Smooth animations
+* Ambient environmental movement
+
+Avoid visual clutter.
+
+Every decoration should improve the world rather than distract from gameplay.
+
+---
+
+# Gameplay
+
+The game is a **2D side-scrolling platformer**.
+
+Each level should include a balanced mix of:
+
+* Platforming
+* Exploration
+* NPC conversations
+* Educational interactions
+* Mini-games
+* Small puzzles
+* Hidden secrets
+* Collectibles
+* Environmental storytelling
+
+Avoid repetitive gameplay.
+
+Players should regularly encounter something new and interesting.
+
+---
+
+# Camera System
+
+Replace any awkward camera behavior with a polished modern side-scrolling camera.
+
+Requirements:
+
+* Smoothly follows the player
+* Comfortable horizontal scrolling
+* Free movement left and right
+* No sudden jumps
+* No awkward transitions
+* Camera movement should feel fluid and professional
+
+---
+
+# Player Guidance
+
+Players should never feel lost.
+
+Guide them using:
+
+* NPC dialogue
+* Environmental design
+* Landmarks
+* Small objective cards
+* Temporary hints
+* Speech bubbles
+* Lighting
+* Camera framing
+* Interactive objects
+
+Avoid large instructional overlays.
+
+---
+
+# UI / UX
+
+Completely modernize the interface.
+
+Requirements:
+
+* Remove the large instruction bar
+* Gameplay should always remain visible
+* Better spacing
+* Better hierarchy
+* Better typography
+* Responsive interactions
+* Smooth menu transitions
+* Light Mode and Dark Mode
+* Consistent styling across every screen
+
+Instructions should appear naturally through:
+
+* Speech bubbles
+* Small objective cards
+* Temporary contextual hints
+
+Never allow UI to block gameplay.
+
+---
+
+# Character Creation
+
+At the beginning of the game, allow players to:
+
+* Enter their name
+* Optionally customize a simple appearance
+
+This helps players connect with their character.
+
+---
+
+# Player Character
+
+Replace any placeholder artwork.
+
+The player should include:
+
+* Proper proportions
+* Two correctly positioned eyes
+* Improved facial design
+* Arms
+* Legs
+* Walking animation
+* Idle animation
+* Jump animation
+* Landing animation
+* Turning animation
+* Expressive movement
+* Better sprite quality
+
+The player should look polished and lively.
+
+### Name Tag
+
+The player's name tag currently overlaps the face.
+
+Move it slightly above the character's head.
+
+It should never cover the face or body.
+
+---
+
+# NPC System
+
+NPCs are central to the experience.
+
+Review every NPC across every level.
+
+Requirements:
+
+* No floating NPCs
+* No NPC standing on obstacle lines
+* No NPC trapped inside platforms
+* No infinite jumping
+* Natural idle animations
+* Walking when appropriate
+* Context-sensitive behavior
+
+Every NPC should feel alive.
+
+---
+
+# Professor Osei Event
+
+Currently, Professor Osei says he will race the player to the mountains, but never actually does.
+
+Redesign this sequence.
+
+Possible improvements include:
+
+* Running alongside the player
+* Occasionally getting ahead
+* Reacting during the race
+* Celebrating at the finish
+* Dynamic dialogue based on the outcome
+
+Ensure gameplay matches the dialogue.
+
+---
+
+# Environment Design
+
+Every object should serve a purpose.
+
+Remove:
+
+* Random floating decorations
+* Meaningless obstacles
+* Floating "Dry" circles
+* Random floating lines
+* Visual clutter
+
+Every object should contribute to one or more of:
+
+* Gameplay
+* Storytelling
+* Navigation
+* Beauty
+* Education
+
+The world should feel intentionally handcrafted.
+
+---
+
+# Educational Design
+
+Never present the article as long text.
+
+Transform concepts into:
+
+* Gameplay mechanics
+* NPC conversations
+* Environmental storytelling
+* Collectibles
+* Interactive events
+* Mini-games
+* Cause-and-effect systems
+* Exploration rewards
+* Optional discoveries
+
+Players should learn naturally through play.
+
+---
+
+# Audio
+
+Improve immersion with:
+
+* Ambient music
+* Environmental sounds
+* Footsteps
+* UI sounds
+* Reward sounds
+* Interaction sounds
+
+Audio should enhance exploration without becoming repetitive.
+
+---
+
+# Reward System
+
+Frequently reward curiosity.
+
+Include:
+
+* Small animations
+* Sound effects
+* Collectibles
+* Achievements
+* Visual celebrations
+* Unlockables
+
+Players should always feel encouraged to explore.
+
+---
+
+# Balloon Progression System
+
+After completing each level:
+
+Award the player one balloon.
+
+Requirements:
+
+* Balloon displays the completed level number
+* Player carries balloons throughout the game
+* Balloons stay behind the player
+* Held by a short string
+* Gentle sway physics
+* Slight drifting motion
+* Never float high above the player
+* Never block gameplay
+
+The balloons should visually represent progress.
+
+---
+
+# Collectibles
+
+Educational facts and stars currently bounce continuously.
+
+Replace with subtle idle animations.
+
+Use:
+
+* Gentle floating
+* Slow bobbing
+* Soft glow
+* Small sparkles
+
+Avoid exaggerated bouncing or constant shaking.
+
+---
+
+# Goal Marker
+
+Replace the distracting expanding circle.
+
+Instead use:
+
+* Soft glow
+* Gentle particles
+* Sparkles
+* Small highlight
+
+The goal should be noticeable without being visually overwhelming.
+
+---
+
+# Main Menu
+
+Current trees flash continuously.
+
+Replace with:
+
+* Gentle wind sway
+* Slow ambient animation
+* Static trees if necessary
+
+Avoid rapid flashing or eye-straining effects.
+
+---
+
+# Grass Animation
+
+Reduce movement significantly.
+
+Grass should gently sway like a light breeze.
+
+---
+
+# Backgrounds
+
+Current backgrounds feel generic.
+
+Redesign every environment to better reflect the article.
+
+Include:
+
+* Meaningful landmarks
+* Parallax scrolling
+* Better scenery
+* Narrative-driven environments
+* Improved color harmony
+* Higher-quality artwork
+* Environmental storytelling
+
+The world itself should teach the topic.
+
+---
+
+# Level Design
+
+Expand the game into approximately **10 unique handcrafted levels**.
+
+Do **not** duplicate existing levels.
+
+Every level should introduce something new.
+
+Examples include:
+
+* New environments
+* New mechanics
+* New platforming ideas
+* Educational interactions
+* NPC stories
+* Exploration
+* Mini-games
+* Puzzles
+* Collectibles
+* Story progression
+
+Difficulty should increase gradually.
+
+The game should remain challenging but always fair.
+
+---
+
+## Level 2
+
+Current issues:
+
+* Confusing objectives
+* Cluttered layout
+* Goal positioned underneath an obstacle
+* Player can finish without legitimately reaching the goal
+
+Fix by:
+
+* Relocating the goal correctly
+* Preventing accidental completion
+* Improving navigation
+* Removing unnecessary objects
+* Making objectives obvious through gameplay
+
+---
+
+## Level 3
+
+Current obstacle course is unfair.
+
+Problems:
+
+* Platforms are too far apart
+* Some jumps are impossible
+
+Fix by:
+
+* Bringing platforms closer
+* Ensuring every jump is possible
+* Keeping the challenge enjoyable rather than frustrating
+
+Reward skill, not luck.
+
+---
+
+# Animation Polish
+
+Review every animation in the game.
+
+Fix any distracting behavior.
+
+Examples include:
+
+* Infinite jumping
+* Constant bouncing
+* Continuous shaking
+* Excessive flashing
+* Fast repetitive motion
+
+Animations should feel smooth, subtle, and natural.
+
+---
+
+# Visual Polish
+
+Improve every aspect of presentation.
+
+Include:
+
+* Better lighting
+* Improved color harmony
+* Consistent asset quality
+* Better spacing
+* Animated backgrounds
+* Smooth scene transitions
+* Appropriate particle effects
+* Cohesive visual identity
+
+Everything should feel handcrafted.
+
+---
+
+# Technical Review
+
+Before considering the project complete, inspect the entire game.
+
+Check for:
+
+* Collision bugs
+* Incorrect level progression
+* NPC placement issues
+* Floating objects
+* UI overlap
+* Animation glitches
+* Camera problems
+* Platforming fairness
+* Collectible placement
+* Goal placement
+* Dialogue consistency
+* Audio consistency
+* Performance issues
+
+Fix any remaining problems.
+
+---
+
+# Final Goal
+
+Transform this project into a polished, complete indie educational platformer rather than a prototype.
+
+When making any design decision, always prioritize:
+
+1. Fun gameplay
+2. Clarity
+3. Smooth user experience
+4. Beautiful presentation
+5. Immersion
+6. Fair progression
+7. Natural learning through interaction
+
+The player should always know what to do without intrusive instructions, enjoy exploring every level, and finish the game having learned the article's ideas through gameplay instead of reading large blocks of text.
+
+Do not make only the requested fixes. Review the entire project holistically and improve any system that feels unfinished, inconsistent, repetitive, or unpolished while remaining faithful to the article and the overall vision.
+
+
+

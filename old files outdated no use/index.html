@@ -1,0 +1,2711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mountains of Wealth</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for retro UI icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --font-title: 'Fredoka One', cursive, sans-serif;
+            --font-body: 'Nunito', sans-serif;
+            --color-primary: #10b981;
+            --color-primary-hover: #059669;
+            --color-bg-dark: #1a1a24;
+            --color-panel-dark: #121216;
+            --color-text-light: #f3f4f6;
+            --color-text-dark: #1f2937;
+            --color-accent: #3b82f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #87CEEB, #B0E0FF);
+            font-family: var(--font-body);
+            color: var(--color-text-light);
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        /* Three.js canvas layer placed behind overlays */
+        #game-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Screen States Overlay */
+        .screen-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .screen-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.05);
+        }
+
+        /* Title Screen CSS (transparent background to let Three.js scenery show through) */
+        #title-screen {
+            background: transparent;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .title-header {
+            margin-top: 10%;
+            text-align: center;
+            animation: floatText 4s ease-in-out infinite;
+        }
+
+        .title-header h1 {
+            font-family: var(--font-title);
+            font-size: 4.5rem;
+            color: white;
+            margin: 0;
+            text-shadow: 0 8px 16px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0,0,0,0.1);
+            letter-spacing: 2px;
+        }
+
+        .title-header p {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin: 15px 0 0 0;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .start-btn {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            color: white;
+            background-color: var(--color-primary);
+            border: none;
+            border-radius: 20px;
+            padding: 20px 48px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3), inset 0 -4px 0 rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 8%;
+            outline: none;
+        }
+
+        .start-btn:hover {
+            background-color: var(--color-primary-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(16, 185, 129, 0.4), inset 0 -4px 0 rgba(0,0,0,0.2);
+        }
+
+        .start-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .sound-toggle {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            font-size: 1.4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            backdrop-filter: blur(5px);
+            z-index: 50;
+        }
+
+        .sound-toggle:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* Character Creation CSS (opaque background matching image) */
+        #char-screen {
+            background-color: var(--color-bg-dark);
+            flex-direction: row;
+            padding: 40px;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .creator-left-panel {
+            width: 320px;
+            height: 480px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            position: relative;
+        }
+
+        #char-preview-container {
+            width: 100%;
+            height: 380px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 2px dashed rgba(255, 255, 255, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-label {
+            font-family: var(--font-title);
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .creator-right-panel {
+            width: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 480px;
+        }
+
+        .creator-right-panel h2 {
+            font-family: var(--font-title);
+            font-size: 2.2rem;
+            margin: 0 0 20px 0;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
+        .control-group {
+            margin-bottom: 22px;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+        }
+
+        .creator-input {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.06);
+            border: 2px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 1.2rem;
+            color: white;
+            outline: none;
+            transition: border-color 0.2s, background-color 0.2s;
+            font-family: var(--font-body);
+        }
+
+        .creator-input:focus {
+            border-color: var(--color-primary);
+            background-color: rgba(255, 255, 255, 0.09);
+        }
+
+        .swatch-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .swatch {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: transform 0.15s, border-color 0.15s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+
+        .swatch:hover {
+            transform: scale(1.15);
+        }
+
+        .swatch.selected {
+            border-color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.4);
+        }
+
+        .creator-nav-btns {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .btn-secondary {
+            font-family: var(--font-title);
+            font-size: 1.3rem;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: color 0.2s;
+        }
+
+        .btn-secondary:hover {
+            color: white;
+        }
+
+        .btn-primary {
+            font-family: var(--font-title);
+            font-size: 1.4rem;
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 14px;
+            padding: 14px 32px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary.ready {
+            background-color: var(--color-primary);
+            box-shadow: 0 6px 12px rgba(16, 185, 129, 0.25);
+        }
+
+        .btn-primary.ready:hover {
+            background-color: var(--color-primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* HUD overlays */
+        #hud-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #hud-container.visible {
+            opacity: 1;
+        }
+
+        .hud-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .hud-panel {
+            background: rgba(26, 26, 36, 0.7);
+            border: 1.5px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+            pointer-events: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .hud-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+
+        .hud-stat i {
+            font-size: 1.2rem;
+        }
+
+        .hud-stat.star i { color: #f59e0b; }
+        .hud-stat.balloon i { color: #ec4899; }
+        .hud-stat.temp i { color: #ef4444; }
+        .hud-stat.humidity i { color: #3b82f6; }
+        .hud-stat.health i { color: #10b981; }
+
+        .stat-bar-outer {
+            width: 100px;
+            height: 10px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 5px;
+            overflow: hidden;
+            display: inline-block;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        .stat-bar-inner {
+            height: 100%;
+            background: #ef4444;
+            width: 50%;
+            transition: width 0.3s ease;
+        }
+
+        .hud-level-indicator {
+            font-family: var(--font-title);
+            font-size: 1.3rem;
+            color: white;
+            text-align: center;
+        }
+
+        .objective-card {
+            background: rgba(16, 185, 129, 0.85);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 12px;
+            padding: 10px 18px;
+            font-size: 1rem;
+            font-weight: 700;
+            max-width: 320px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            backdrop-filter: blur(5px);
+            margin-top: 10px;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        /* Custom Dialogue bubble over characters in 3D scene */
+        #dialogue-overlay {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 650px;
+            background: rgba(26, 26, 36, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            backdrop-filter: blur(15px);
+            z-index: 100;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            pointer-events: auto;
+            opacity: 0;
+            transform: translate(-50%, 20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        #dialogue-overlay.visible {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        .dialogue-speaker {
+            font-family: var(--font-title);
+            font-size: 1.25rem;
+            color: var(--color-primary);
+        }
+
+        .dialogue-text {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .dialogue-prompt {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: right;
+            animation: pulseText 1.5s infinite;
+        }
+
+        /* Interactive Fact Popups (Neal.fun style) */
+        #fact-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 120;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        #fact-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .fact-card {
+            background: #1e1e2d;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            width: 90%;
+            max-width: 580px;
+            padding: 30px 40px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #fact-overlay.visible .fact-card {
+            transform: scale(1);
+        }
+
+        .fact-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .fact-title {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            margin: 0 0 15px 0;
+            color: white;
+        }
+
+        .fact-text {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+        }
+
+        /* Neal.fun styled interactive visual */
+        .fact-visual {
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px dashed rgba(255,255,255,0.08);
+        }
+
+        .btn-fact-close {
+            font-family: var(--font-title);
+            font-size: 1.25rem;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 35px;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2);
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-fact-close:hover {
+            background-color: var(--color-primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Level Intro card screen */
+        #intro-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #111116;
+            z-index: 150;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+
+        #intro-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .intro-lvl-num {
+            font-family: var(--font-title);
+            font-size: 2.2rem;
+            color: var(--color-primary);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.5s 0.2s, opacity 0.5s 0.2s;
+        }
+
+        .intro-lvl-title {
+            font-family: var(--font-title);
+            font-size: 3.5rem;
+            color: white;
+            margin: 0 0 25px 0;
+            text-align: center;
+            padding: 0 20px;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.5s 0.4s, opacity 0.5s 0.4s;
+        }
+
+        .intro-lvl-desc {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.6);
+            max-width: 500px;
+            text-align: center;
+            line-height: 1.6;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.5s 0.6s, opacity 0.5s 0.6s;
+        }
+
+        #intro-overlay.visible .intro-lvl-num,
+        #intro-overlay.visible .intro-lvl-title,
+        #intro-overlay.visible .intro-lvl-desc {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Level Complete screen */
+        #complete-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(18, 18, 24, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 110;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+
+        #complete-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .complete-card {
+            background: #1c1c28;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            width: 90%;
+            max-width: 520px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+            transform: translateY(30px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #complete-overlay.visible .complete-card {
+            transform: translateY(0);
+        }
+
+        .complete-title {
+            font-family: var(--font-title);
+            font-size: 2.2rem;
+            color: #10b981;
+            margin: 0 0 10px 0;
+        }
+
+        .complete-sub {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 25px;
+        }
+
+        .balloon-award-showcase {
+            margin: 25px 0;
+            position: relative;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .balloon-award-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #f472b6 0%, #ec4899 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: var(--font-title);
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 8px 24px rgba(236, 72, 153, 0.4);
+            animation: bounceAward 2s ease-in-out infinite;
+        }
+
+        .balloon-award-string {
+            position: absolute;
+            bottom: 0;
+            width: 2px;
+            height: 25px;
+            background: rgba(255,255,255,0.4);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .complete-stats {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-box-val {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .stat-box-lbl {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 5px;
+        }
+
+        /* Mobile controls overlay */
+        #mobile-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            display: none;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .mobile-btn-group {
+            display: flex;
+            gap: 20px;
+            pointer-events: auto;
+        }
+
+        .mobile-btn {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1.6rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            outline: none;
+            transition: background 0.1s, transform 0.1s;
+        }
+
+        .mobile-btn:active {
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(0.9);
+        }
+
+        /* End Credits overlay */
+        #credits-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0d0d13;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s;
+        }
+
+        #credits-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .credits-container {
+            text-align: center;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        .credits-container h2 {
+            font-family: var(--font-title);
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .credits-container p {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 30px;
+        }
+
+        .credits-solutions-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        .credits-solutions-box h3 {
+            font-family: var(--font-title);
+            font-size: 1.4rem;
+            color: #10b981;
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        .credits-solutions-box ul {
+            margin: 0;
+            padding-left: 20px;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.6;
+        }
+
+        .credits-solutions-box li {
+            margin-bottom: 8px;
+        }
+
+        .btn-restart {
+            font-family: var(--font-title);
+            font-size: 1.4rem;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 40px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-restart:hover {
+            background-color: var(--color-primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Animations */
+        @keyframes floatText {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes bounceAward {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Neal.fun comparison visuals style */
+        .comparison-bar-container {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            gap: 15px;
+        }
+        .comparison-label {
+            width: 120px;
+            text-align: right;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .comparison-track {
+            flex-grow: 1;
+            height: 24px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        .comparison-fill {
+            height: 100%;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: white;
+            transition: width 1s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <canvas id="game-canvas"></canvas>
+
+    <!-- UI Overlays -->
+
+    <!-- Sound Button -->
+    <button class="sound-toggle" id="sound-btn" onclick="game.toggleAudio()">
+        <i class="fa-solid fa-volume-high"></i>
+    </button>
+
+    <!-- Title Screen -->
+    <div class="screen-overlay" id="title-screen">
+        <div class="title-header">
+            <h1>Mountains of Wealth</h1>
+            <p>An Educational Journey Through Climate and Geography</p>
+        </div>
+        <button class="start-btn" onclick="game.startCreation()">
+            <i class="fa-solid fa-play"></i> Start Adventure
+        </button>
+    </div>
+
+    <!-- Character Creation Screen -->
+    <div class="screen-overlay hidden" id="char-screen">
+        <div class="creator-left-panel">
+            <div id="char-preview-container"></div>
+            <div class="preview-label" id="preview-name-lbl">Explorer</div>
+        </div>
+        <div class="creator-right-panel">
+            <h2>Create Your Explorer</h2>
+            
+            <div class="control-group">
+                <label for="char-name">Name</label>
+                <input type="text" id="char-name" class="creator-input" placeholder="Enter your name..." maxlength="12" oninput="game.updateCreatorName(this.value)">
+            </div>
+
+            <div class="control-group">
+                <label>Skin Tone</label>
+                <div class="swatch-row" id="skin-swatches"></div>
+            </div>
+
+            <div class="control-group">
+                <label>Outfit Color</label>
+                <div class="swatch-row" id="outfit-swatches"></div>
+            </div>
+
+            <div class="control-group">
+                <label>Hat style</label>
+                <div class="swatch-row" id="hat-swatches"></div>
+            </div>
+
+            <div class="creator-nav-btns">
+                <button class="btn-secondary" onclick="game.backToTitle()">Back</button>
+                <button class="btn-primary" id="btn-begin-journey" onclick="game.beginJourney()">
+                    Begin Journey <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HUD Overlay -->
+    <div id="hud-container">
+        <div class="hud-top-bar">
+            <div class="hud-panel">
+                <div class="hud-level-indicator" id="hud-level-title">Level 1</div>
+                <div class="hud-stat star">
+                    <i class="fa-solid fa-star"></i>
+                    <span id="hud-stars">0 / 3</span>
+                </div>
+                <div class="hud-stat balloon">
+                    <i class="fa-solid fa-parachute-box"></i>
+                    <span id="hud-balloons">0</span>
+                </div>
+            </div>
+            
+            <!-- Dynamic stats depending on level theme -->
+            <div class="hud-panel" id="hud-dynamic-stats">
+                <div class="hud-stat temp" id="hud-temp-container" style="display:none;">
+                    <i class="fa-solid fa-temperature-half"></i>
+                    <span>Temp: <span id="hud-temp-val">25</span>°C</span>
+                    <div class="stat-bar-outer"><div class="stat-bar-inner" id="hud-temp-bar"></div></div>
+                </div>
+                <div class="hud-stat humidity" id="hud-humidity-container" style="display:none;">
+                    <i class="fa-solid fa-droplet"></i>
+                    <span>Humidity: <span id="hud-humidity-val">50</span>%</span>
+                </div>
+                <div class="hud-stat health" id="hud-health-container" style="display:none;">
+                    <i class="fa-solid fa-heart"></i>
+                    <span>Health: <span id="hud-health-val">100</span>%</span>
+                    <div class="stat-bar-outer"><div class="stat-bar-inner" id="hud-health-bar" style="background:#10b981;"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="objective-card" id="hud-objective">
+            Objective: Find the explorer path.
+        </div>
+    </div>
+
+    <!-- Mobile Virtual Controller -->
+    <div id="mobile-controls">
+        <div class="mobile-btn-group">
+            <button class="mobile-btn" id="mbtn-left"><i class="fa-solid fa-arrow-left"></i></button>
+            <button class="mobile-btn" id="mbtn-right"><i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+        <div class="mobile-btn-group">
+            <button class="mobile-btn" id="mbtn-interact"><i class="fa-solid fa-hand"></i></button>
+            <button class="mobile-btn" id="mbtn-jump"><i class="fa-solid fa-arrow-up"></i></button>
+        </div>
+    </div>
+
+    <!-- Level Intro screen -->
+    <div id="intro-overlay">
+        <div class="intro-lvl-num" id="intro-lvl-num">LEVEL 1</div>
+        <h2 class="intro-lvl-title" id="intro-lvl-title">The Warm Valley</h2>
+        <p class="intro-lvl-desc" id="intro-lvl-desc">Explore the valley and learn about the impact of temperature on human speed.</p>
+    </div>
+
+    <!-- Dialogue Box Screen Overlay -->
+    <div id="dialogue-overlay">
+        <div class="dialogue-speaker" id="dialogue-speaker">Professor Osei</div>
+        <div class="dialogue-text" id="dialogue-text">Welcome, Explorer! Let's examine this area together.</div>
+        <div class="dialogue-prompt">PRESS ENTER / SPACE / TAP TO CONTINUE</div>
+    </div>
+
+    <!-- Fact Visual Modal Screen (Neal.fun style) -->
+    <div id="fact-overlay">
+        <div class="fact-card">
+            <span class="fact-icon" id="fact-icon">💡</span>
+            <h3 class="fact-title" id="fact-title">Temperature and Growth</h3>
+            <p class="fact-text" id="fact-text">Did you know? Every 1°C increase in temperature above optimal levels reduces economic output by up to 1.3 percentage points.</p>
+            <div class="fact-visual" id="fact-visual-content">
+                <!-- Dynamically populated neal.fun visuals -->
+            </div>
+            <button class="btn-fact-close" onclick="game.closeFact()">Awesome!</button>
+        </div>
+    </div>
+
+    <!-- Level Complete Screen -->
+    <div id="complete-overlay">
+        <div class="complete-card">
+            <h3 class="complete-title">Level Completed!</h3>
+            <div class="complete-sub" id="complete-summary">You explored the hot valleys successfully.</div>
+            
+            <div class="balloon-award-showcase">
+                <div class="balloon-award-circle" id="balloon-award-val">1</div>
+                <div class="balloon-award-string"></div>
+            </div>
+
+            <div class="complete-stats">
+                <div class="stat-box">
+                    <span class="stat-box-val" id="stat-stars">3 / 3</span>
+                    <span class="stat-box-lbl">Stars Found</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-box-val" id="stat-facts">2 / 2</span>
+                    <span class="stat-box-lbl">Facts Discovered</span>
+                </div>
+            </div>
+
+            <button class="btn-fact-close" onclick="game.nextLevel()">Continue Journey <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+    </div>
+
+    <!-- Credits Screen -->
+    <div id="credits-overlay">
+        <div class="credits-container">
+            <h2>The Summit of Wealth</h2>
+            <p>Congratulations, <span id="player-credits-name">Explorer</span>! You have completed your journey across the mountains, valleys, and cities, discovering why geography and climate shape human development.</p>
+            
+            <div class="credits-solutions-box">
+                <h3>Paths to Economic Progress:</h3>
+                <ul>
+                    <li><strong>Lowlands & Swamps:</strong> Build widespread air conditioning infrastructure, utilize abundant solar power, and eradicate vector-borne diseases.</li>
+                    <li><strong>Mountain Highlands:</strong> Invest heavily in transportation tunnels, bridges, railways, and roads to overcome physical trade barriers and prevent balkanization.</li>
+                </ul>
+            </div>
+
+            <p style="font-size: 1rem; color: rgba(255,255,255,0.4); margin-bottom: 25px;">Inspired by the article: "Why Warm Countries Are Poorer" by Tomas Pueyo</p>
+            
+            <button class="btn-restart" onclick="location.reload()">Play Again <i class="fa-solid fa-rotate-left"></i></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Procedural Synth Audio Engine (Web Audio API) ---
+    class AudioEngine {
+        constructor() {
+            this.ctx = null;
+            this.muted = false;
+            this.isPlayingBgm = false;
+            this.bgmInterval = null;
+        }
+
+        init() {
+            if (this.ctx) return;
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new AudioContext();
+            this.startBgm();
+        }
+
+        toggle() {
+            this.muted = !this.muted;
+            if (this.muted) {
+                if (this.ctx) this.ctx.suspend();
+            } else {
+                this.init();
+                if (this.ctx) this.ctx.resume();
+            }
+            return this.muted;
+        }
+
+        playTone(freq, type, duration, volume, startOffset = 0) {
+            if (this.muted || !this.ctx) return;
+            try {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime + startOffset);
+                
+                gain.gain.setValueAtTime(volume, this.ctx.currentTime + startOffset);
+                gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + startOffset + duration);
+                
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                
+                osc.start(this.ctx.currentTime + startOffset);
+                osc.stop(this.ctx.currentTime + startOffset + duration);
+            } catch (e) { console.warn(e); }
+        }
+
+        playJump() {
+            this.playTone(180, 'sine', 0.15, 0.1);
+            this.playTone(280, 'sine', 0.15, 0.08, 0.05);
+        }
+
+        playCollect() {
+            this.playTone(523.25, 'triangle', 0.2, 0.15); // C5
+            this.playTone(659.25, 'triangle', 0.2, 0.12, 0.08); // E5
+            this.playTone(783.99, 'triangle', 0.3, 0.1, 0.16); // G5
+        }
+
+        playHurt() {
+            this.playTone(150, 'sawtooth', 0.25, 0.12);
+            this.playTone(100, 'sawtooth', 0.25, 0.1, 0.05);
+        }
+
+        playWin() {
+            const chord = [261.63, 329.63, 392.00, 523.25]; // C chord
+            chord.forEach((freq, idx) => {
+                this.playTone(freq, 'sine', 0.8, 0.1, idx * 0.08);
+            });
+        }
+
+        playSwitch() {
+            this.playTone(400, 'triangle', 0.1, 0.1);
+            this.playTone(600, 'triangle', 0.1, 0.08, 0.05);
+        }
+
+        startBgm() {
+            if (this.isPlayingBgm) return;
+            this.isPlayingBgm = true;
+            
+            // Retro synth loop chord progression (Cozy, relaxing)
+            // Cmaj7 -> Am7 -> Fmaj7 -> G7
+            const notes = [
+                [261.63, 329.63, 392.00, 493.88], // Cmaj7
+                [220.00, 261.63, 329.63, 392.00], // Am7
+                [174.61, 220.00, 261.63, 349.23], // Fmaj7
+                [196.00, 246.94, 293.66, 392.00]  // G7
+            ];
+
+            let step = 0;
+            this.bgmInterval = setInterval(() => {
+                if (this.muted) return;
+                const chordIdx = Math.floor(step / 4) % notes.length;
+                const noteIdx = step % 4;
+                const baseNote = notes[chordIdx][noteIdx];
+                
+                // Arpeggio note
+                this.playTone(baseNote, 'triangle', 0.6, 0.025);
+                
+                // Occasional bass note on 1st beat of chord
+                if (noteIdx === 0) {
+                    this.playTone(baseNote / 2, 'sine', 1.2, 0.04);
+                }
+
+                step++;
+            }, 600);
+        }
+    }
+
+    const audio = new AudioEngine();
+
+    // --- Configurations & Data ---
+    const SKIN_COLORS = ["#5c3d2e", "#8c5638", "#a8724d", "#c68f65", "#e5b084", "#ffd3b6"];
+    const OUTFIT_COLORS = ["#2563eb", "#dc2626", "#16a34a", "#ca8a04", "#7c3aed", "#0d9488", "#db2777", "#991b1b"];
+    const HAT_COLORS = ["#e11d48", "#334155", "#0d9488", "#7c3aed", "#ea580c", "#16a34a", "#2563eb", "#d97706"];
+
+    // 10 level definitions
+    const LEVEL_DATA = [
+        {
+            id: 1,
+            title: "The Warm Valley",
+            desc: "Explore the tropical valley. Notice how high temperatures drag down work speed and physical performance.",
+            theme: "warm",
+            factTitle: "Climate & Output",
+            factIcon: "🌡️",
+            factText: "Each additional degree Celsius above 15°C shrinks GDP per capita by up to 8.5%! Hot temperatures directly reduce manual labor efficiency.",
+            comparisonLabels: ["Comfort (15°C)", "Warm (27°C)", "Hot (35°C)"],
+            comparisonValues: [100, 96, 65], // % Productivity
+            comparisonSuffix: "%",
+            objective: "Walk under shade structures (green canopies) to cool down and maintain walking speed. Find the portal!",
+            map: [
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                T                                                                                  ",
+                "               ###                                             T                                   ",
+                "                                                              ###                                  ",
+                "       #   #         #                               #   #          #                       G      ",
+                "      ##   #         #                              ##   #          #                      ##      ",
+                "     ###   #    *    #   ?          *              ###   #    *     #   ?         *       ###      ",
+                "###################################################################################################"
+            ]
+        },
+        {
+            id: 2,
+            title: "Humidity & The Dew Point",
+            desc: "When humidity hits 100%, sweat cannot evaporate. To cool down, humans must completely stop moving.",
+            theme: "humid",
+            factTitle: "The Sweat Limit",
+            factIcon: "💧",
+            factText: "At high humidity levels, the dew point is so high that human sweat cannot evaporate to cool the skin. Sweating stops working, meaning we overheat if we continue physical work.",
+            comparisonLabels: ["Dry Heat", "50% Humidity", "100% Humidity"],
+            comparisonValues: [100, 80, 20], // Sweat Effectiveness
+            comparisonSuffix: "%",
+            objective: "Avoid sprinting continuously. Stand directly beneath breeze fans to rapidly dump your core heat.",
+            map: [
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                F                                                                                  ",
+                "               ===                                             F                                   ",
+                "                                                              ===                                  ",
+                "       #             #            *                  #              #                       G      ",
+                "      ##             #          ====                ##              #                      ##      ",
+                "     ###    *    ?   #                             ###    *     ?   #                     ###      ",
+                "###################################################################################################"
+            ]
+        },
+        {
+            id: 3,
+            title: "The Disease Lowlands",
+            desc: "Warm and humid lowlands are breeding grounds for mosquitoes carrying deadly diseases like Malaria.",
+            theme: "disease",
+            factTitle: "The Health Burden",
+            factIcon: "🦟",
+            factText: "Warmth directly reduces health because tropical pathogens thrive in humid lowlands. Historically, disease wiped out settlements and kept generations of workers sick and less productive.",
+            comparisonLabels: ["Cold Zone", "Temperate Zone", "Equatorial Tropics"],
+            comparisonValues: [5, 25, 95], // Disease Index
+            comparisonSuffix: " pts",
+            objective: "Dodge the buzzing red mosquito particles. Collect Medicine packages to instantly cure disease.",
+            map: [
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                  *                                                                ",
+                "              =====              ===                                                               ",
+                "                                                                                                   ",
+                "       #   #         #                               #   #          #            *          G      ",
+                "      ##   #    +    #                              ##   #    +     #           ##         ##      ",
+                "     ###   #    ?    #                              ###  #    ?     #   *      ###        ###      ",
+                "###################################################################################################"
+            ]
+        },
+        {
+            id: 4,
+            title: "The Frost Line",
+            desc: "Pathogens and vectors die off when temperatures hit frost levels. Let's head higher to find fresh air.",
+            theme: "frost",
+            factTitle: "Frost as a Sanitizer",
+            factIcon: "❄️",
+            factText: "Frost functions as a massive natural sanitizer. It eliminates pests, insects, and larvae, reducing the historical disease load of cold countries to near-zero.",
+            comparisonLabels: ["Crops Saved", "Vector Elimination", "Health Boost"],
+            comparisonValues: [85, 99, 90], // % Benefit
+            comparisonSuffix: "%",
+            objective: "Climb onto the high frozen mountain platforms. Notice how your speed returns and disease is wiped out.",
+            map: [
+                "                                                                                                G  ",
+                "                                                                                              =====",
+                "                                                                                    =====          ",
+                "                                                                          =====                    ",
+                "                                                                =====                              ",
+                "                                                      =====                                        ",
+                "                                            =====                                                  ",
+                "                                  =====                                                            ",
+                "                           =====                                                                   ",
+                "                    =====                                                                          ",
+                "       #     ?                                                                                     ",
+                "###################################################################################################"
+            ]
+        },
+        {
+            id: 5,
+            title: "Rise of the Mountains",
+            desc: "Because of heat and disease, historical populations in warm countries migrated up into high altitude mountains.",
+            theme: "mountains",
+            factTitle: "High Altitude Havens",
+            factIcon: "⛰️",
+            factText: "Bogota, Medellin, and Mexico City are located high in the mountains. Tropical capitals are on average much higher up than temperate ones, escaping lowland disease vectors and high humidity.",
+            comparisonLabels: ["Bogotá (Equator)", "Addis Ababa (Equator)", "Paris (Temperate)"],
+            comparisonValues: [2600, 2355, 35], // Elevation (m)
+            comparisonSuffix: "m",
+            objective: "Ascend to the mountain plateau. Escaping the lower jungle levels protects you from heat and illness.",
+            map: [
+                "                                                                                                G  ",
+                "                                                                                             ####  ",
+                "                                                                                          ####     ",
+                "                                                                                      ####         ",
+                "                                                                                  ####             ",
+                "                                                                              ####                 ",
+                "                                                                          ####                     ",
+                "                                                                      ####                         ",
+                "                                                                  ####                             ",
+                "                                                              ####                                 ",
+                "       #    *        ?                                    ####                                     ",
+                "##############################################################                                     "
+            ]
+        },
+        {
+            id: 6,
+            title: "Trade & Transportation",
+            desc: "Living in mountains has a heavy price: steep slopes make transportation and trade extremely costly.",
+            theme: "transport",
+            factTitle: "Transportation Cost",
+            factIcon: "🛤️",
+            factText: "Mountains dramatically raise infrastructure costs. High transport costs isolate regions, blocking trade and preventing historical wealth accumulation compared to flat river valleys.",
+            comparisonLabels: ["Flat River Plain", "Hilly Plain", "Mountain Passes"],
+            comparisonValues: [100, 320, 950], // Infrastructure Cost Index
+            comparisonSuffix: " pt",
+            objective: "Collect Timber logs to repair the broken bridges. Help the trade merchant connect the valley communities.",
+            map: [
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                B                                                                                  ",
+                "               ===                                             B                                   ",
+                "       #                               #   #                  ===                           G      ",
+                "      ##        M                     ##   #          M       ###                          ##      ",
+                "     ###        ?                     ###  #          ?                                   ###      ",
+                "#################                    #######                 ######################################"
+            ]
+        },
+        {
+            id: 7,
+            title: "Balkanization",
+            desc: "Mountain peaks segment societies, leading to a loss of unified trade systems and triggering regional conflicts.",
+            theme: "balkanization",
+            factTitle: "Valley Isolation",
+            factIcon: "🗣️",
+            factText: "Mountainous topography prevents regional integration. Vallely communities develop diverse, isolated cultures and customs, historically leading to mistrust, fragmentation (Balkanization), and civil war.",
+            comparisonLabels: ["Flat Landscape Harmony", "Hilly Landscape friction", "Mountain Balkanization"],
+            comparisonValues: [15, 45, 90], // Conflict Probability
+            comparisonSuffix: "%",
+            objective: "Deliver diplomatic peace letters to the Chiefs in separate valleys to bridge their cultural divide.",
+            map: [
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                #                                               #                                  ",
+                "               ###                                             ###                                 ",
+                "              #####                                           #####                                ",
+                "       #     #######     #             #   #                 #######                            G  ",
+                "      ##    #########    #      D      ##   #       D       #########                          ##  ",
+                "     ###   ###########   #      ?     ###  #        ?      ###########                        ###  ",
+                "###################################################################################################"
+            ]
+        },
+        {
+            id: 8,
+            title: "The Inca Empire",
+            desc: "The unique mountain geography of the Andes hosted the only major independent empire to form on the equator.",
+            theme: "inca",
+            factTitle: "The Andean Miracle",
+            factIcon: "🏛️",
+            factText: "The Incan Empire stretched along the steep Andes range. By mastering terraced farming, high road networks, and suspension bridges, they built a thriving mountain civilization despite extreme geography.",
+            comparisonLabels: ["Terraced Farm Output", "High-Road Length", "Suspension Bridges"],
+            comparisonValues: [85, 40, 60], // Empire Efficiency Index
+            comparisonSuffix: "/100",
+            objective: "Explore ancient stone ruins and collect golden Inca artifacts while climbing the high terraced path.",
+            map: [
+                "                                                                                                G  ",
+                "                                                                                             ####  ",
+                "                                                                                      #######      ",
+                "                                                                              #######              ",
+                "                                                                      #######                      ",
+                "                                                              #######                              ",
+                "                                                      #######                                      ",
+                "                                              #######                                              ",
+                "                                      #######                                                      ",
+                "                              #######                                                              ",
+                "       #    *        ?        #######                                                              ",
+                "#####################################                                                              "
+            ]
+        },
+        {
+            id: 9,
+            title: "Air Conditioning Revolution",
+            desc: "The single most important technology that transformed hot countries like Singapore into industrial giants.",
+            theme: "ac",
+            factTitle: "Lee Kuan Yew's Secret",
+            factIcon: "🌬️",
+            factText: "Singapore's first Prime Minister declared Air Conditioning the most important invention of the 20th century. By cooling offices and factories, AC raised manual and mental labor output to temperate standards.",
+            comparisonLabels: ["Non-AC Office Output", "AC Cooled Output", "Target Standard"],
+            comparisonValues: [45, 95, 100], // Work Efficiency
+            comparisonSuffix: "%",
+            objective: "Activate the localized Solar AC units. Powering the AC systems boosts your productivity, speed, and health.",
+            map: [
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                                                                                                   ",
+                "                S                                               S                                  ",
+                "               ===                                             ===                                 ",
+                "                                                                                                   ",
+                "       #                 #             #   #                                                G      ",
+                "      ##                 #             ##   #                                              ##      ",
+                "     ###        A    ?   #            ###  #          A     ?                             ###      ",
+                "###################################################################################################"
+            ]
+        },
+        {
+            id: 10,
+            title: "The Summit of Solutions",
+            desc: "Reach the ultimate mountain summit and unlock actionable pathways to fight geographic poverty.",
+            theme: "summit",
+            factTitle: "Solving Geography",
+            factIcon: "🚩",
+            factText: "To overcome climate poverty, we must build massive transport grids (highways, tunnels, rail) in mountainous zones, and maximize AC access and mosquito eradication in tropical lowlands.",
+            comparisonLabels: ["Lowland Solutions (AC)", "Mountain Solutions (Grid)", "Development Target"],
+            comparisonValues: [90, 85, 100], // Resolution Impact
+            comparisonSuffix: "%",
+            objective: "Make the final climb, plant the Solution Flags, and release your balloon path to the sky!",
+            map: [
+                "                                                                                                G  ",
+                "                                                                                             ####  ",
+                "                                                                                          ####     ",
+                "                                                                                      ####         ",
+                "                                                                                  ####             ",
+                "                                                                              ####                 ",
+                "                                                                          ####                     ",
+                "                                                                      ####                         ",
+                "                                                                  ####                             ",
+                "                                                              ####                                 ",
+                "       #    *        ?                                    ####                                     ",
+                "##############################################################                                     "
+            ]
+        }
+    ];
+
+    // Helper functions for dynamic 2D canvas textures
+    function createTileTexture(theme) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 64;
+        canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        
+        if (theme === 'frost') {
+            ctx.fillStyle = '#60a5fa'; // Ice blue block
+            ctx.fillRect(0, 0, 64, 64);
+            ctx.fillStyle = '#ffffff'; // Snowy top
+            ctx.fillRect(0, 0, 64, 18);
+            ctx.fillStyle = '#93c5fd';
+            ctx.fillRect(0, 18, 64, 4);
+        } else if (theme === 'inca') {
+            ctx.fillStyle = '#57534e'; // Stone brick block
+            ctx.fillRect(0, 0, 64, 64);
+            ctx.strokeStyle = '#292524';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(0, 0, 64, 64);
+            ctx.beginPath();
+            ctx.moveTo(32, 0); ctx.lineTo(32, 64);
+            ctx.moveTo(0, 32); ctx.lineTo(64, 32);
+            ctx.stroke();
+        } else if (theme === 'ac') {
+            ctx.fillStyle = '#9ca3af'; // City concrete block
+            ctx.fillRect(0, 0, 64, 64);
+            ctx.strokeStyle = '#4b5563';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(0, 0, 64, 64);
+        } else {
+            ctx.fillStyle = '#78350f'; // Standard dirt brown
+            ctx.fillRect(0, 0, 64, 64);
+            ctx.fillStyle = '#22c55e'; // Grass green top
+            ctx.fillRect(0, 0, 64, 18);
+            ctx.fillStyle = '#15803d';
+            ctx.fillRect(0, 18, 64, 4);
+        }
+        
+        return new THREE.CanvasTexture(canvas);
+    }
+
+    function draw2DCharacterMesh(skin, outfit, hat) {
+        const group = new THREE.Group();
+
+        // Face plane (skin color)
+        const headMat = new THREE.MeshBasicMaterial({ color: skin, side: THREE.DoubleSide });
+        const head = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 0.7), headMat);
+        head.position.y = 1.45;
+        group.add(head);
+
+        // Torso / Shirt plane (outfit color)
+        const torsoMat = new THREE.MeshBasicMaterial({ color: outfit, side: THREE.DoubleSide });
+        const torso = new THREE.Mesh(new THREE.PlaneGeometry(0.65, 0.75), torsoMat);
+        torso.position.y = 0.8;
+        group.add(torso);
+
+        // Eyes
+        const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const pupilMat = new THREE.MeshBasicMaterial({ color: 0x111827 });
+        const eyeG = new THREE.PlaneGeometry(0.12, 0.12);
+        const pupilG = new THREE.PlaneGeometry(0.06, 0.06);
+
+        const leftEye = new THREE.Mesh(eyeG, eyeMat);
+        leftEye.position.set(-0.16, 1.48, 0.02);
+        const leftPupil = new THREE.Mesh(pupilG, pupilMat);
+        leftPupil.position.set(-0.16, 1.48, 0.03);
+        group.add(leftEye);
+        group.add(leftPupil);
+
+        const rightEye = new THREE.Mesh(eyeG, eyeMat);
+        rightEye.position.set(0.16, 1.48, 0.02);
+        const rightPupil = new THREE.Mesh(pupilG, pupilMat);
+        rightPupil.position.set(0.16, 1.48, 0.03);
+        group.add(rightEye);
+        group.add(rightPupil);
+
+        // Smile
+        const smileMat = new THREE.MeshBasicMaterial({ color: 0xe11d48 });
+        const smile = new THREE.Mesh(new THREE.PlaneGeometry(0.15, 0.05), smileMat);
+        smile.position.set(0, 1.30, 0.02);
+        group.add(smile);
+
+        // Legs (Pants / shoes)
+        const legMat = new THREE.MeshBasicMaterial({ color: '#1f2937' });
+        const legG = new THREE.PlaneGeometry(0.14, 0.45);
+        
+        const leftLeg = new THREE.Mesh(legG, legMat);
+        leftLeg.position.set(-0.18, 0.22, 0.01);
+        leftLeg.name = "leftLeg";
+        group.add(leftLeg);
+
+        const rightLeg = new THREE.Mesh(legG, legMat);
+        rightLeg.position.set(0.18, 0.22, 0.01);
+        rightLeg.name = "rightLeg";
+        group.add(rightLeg);
+
+        // Explorer Hat
+        const hatMat = new THREE.MeshBasicMaterial({ color: hat });
+        const hatDome = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.26), hatMat);
+        hatDome.position.set(0, 1.84, 0.03);
+        group.add(hatDome);
+        const hatBrim = new THREE.Mesh(new THREE.PlaneGeometry(0.96, 0.06), hatMat);
+        hatBrim.position.set(0, 1.71, 0.03);
+        group.add(hatBrim);
+
+        return group;
+    }
+
+    // Secondary preview class for Character builder
+    class CharacterPreview {
+        constructor(containerId) {
+            this.container = document.getElementById(containerId);
+            this.scene = new THREE.Scene();
+            
+            this.camera = new THREE.PerspectiveCamera(45, this.container.clientWidth / this.container.clientHeight, 0.1, 100);
+            this.camera.position.set(0, 1.05, 3.2);
+            this.camera.lookAt(0, 1.05, 0);
+
+            this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+            this.container.appendChild(this.renderer.domElement);
+
+            const ambient = new THREE.AmbientLight(0xffffff, 0.9);
+            this.scene.add(ambient);
+
+            this.characterGroup = new THREE.Group();
+            this.scene.add(this.characterGroup);
+            
+            this.animate();
+        }
+
+        update(skin, outfit, hat) {
+            while(this.characterGroup.children.length > 0) {
+                this.characterGroup.remove(this.characterGroup.children[0]);
+            }
+            const mesh = draw2DCharacterMesh(skin, outfit, hat);
+            this.characterGroup.add(mesh);
+        }
+
+        animate() {
+            requestAnimationFrame(() => this.animate());
+            if (this.characterGroup) {
+                this.characterGroup.rotation.y += 0.018;
+            }
+            this.renderer.render(this.scene, this.camera);
+        }
+    }
+
+    // --- Main Game Class ---
+    class Game {
+        constructor() {
+            this.state = 'TITLE'; // TITLE, CREATION, PLAYING, DIALOGUE, FACT, COMPLETE, CREDITS
+            this.currentLevelIndex = 0;
+            this.starsCollected = 0;
+            this.starsInLevel = 3;
+            this.factsCollected = 0;
+            this.factsInLevel = 2;
+            
+            // Customization selections
+            this.charName = "Explorer";
+            this.selectedSkin = 3;
+            this.selectedOutfit = 2;
+            this.selectedHat = 7;
+
+            // Player state
+            this.playerX = 2;
+            this.playerY = 2;
+            this.playerVx = 0;
+            this.playerVy = 0;
+            this.isGrounded = false;
+            this.coyoteTime = 0;
+            this.jumpBuffered = 0;
+            this.facingRight = true;
+
+            // Health, Temp, Humidity parameters (for level effects)
+            this.playerTemp = 25;
+            this.playerHumidity = 50;
+            this.playerHealth = 100;
+            this.baseSpeed = 0.12;
+            this.currentSpeed = 0.12;
+
+            // Dialogue flow states
+            this.dialogueQueue = [];
+            this.dialogueCallback = null;
+
+            // Three.js instances
+            this.renderer = null;
+            this.scene = null;
+            this.camera = null;
+            this.meshes = [];
+            this.particles = [];
+            
+            // Background elements
+            this.swayables = [];
+            this.clouds = [];
+            this.bgHills = [];
+            
+            // Entities
+            this.gameCharacter = null;
+            this.npcs = [];
+            this.collectibles = [];
+            this.decorations = [];
+            this.balloons = [];
+
+            // Input handlers
+            this.keys = {};
+            this.previewInstance = null;
+        }
+
+        init() {
+            // Render targets
+            this.renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('game-canvas'), antialias: true, alpha: true });
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // Keyboard actions
+            window.addEventListener('keydown', (e) => {
+                this.keys[e.code] = true;
+                if (e.code === 'Space' || e.code === 'Enter') {
+                    if (this.state === 'DIALOGUE') {
+                        this.nextDialogue();
+                    }
+                }
+            });
+            window.addEventListener('keyup', (e) => { this.keys[e.code] = false; });
+
+            // Swatches loading
+            this.renderSwatches();
+            
+            // Screen resizing
+            window.addEventListener('resize', () => {
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                if (this.camera) {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                }
+            });
+
+            // Initialize Title Scene (2D animated view)
+            this.setupTitleScene();
+            this.animate();
+
+            // Setup virtual controllers
+            this.setupMobileControls();
+        }
+
+        renderSwatches() {
+            // Skin swatches
+            const skins = document.getElementById('skin-swatches');
+            SKIN_COLORS.forEach((color, i) => {
+                const s = document.createElement('div');
+                s.className = `swatch ${i === this.selectedSkin ? 'selected' : ''}`;
+                s.style.backgroundColor = color;
+                s.onclick = () => {
+                    document.querySelectorAll('#skin-swatches .swatch').forEach(el=>el.classList.remove('selected'));
+                    s.classList.add('selected');
+                    this.selectedSkin = i;
+                    this.updateCreatorPreview();
+                };
+                skins.appendChild(s);
+            });
+
+            // Outfit swatches
+            const outfits = document.getElementById('outfit-swatches');
+            OUTFIT_COLORS.forEach((color, i) => {
+                const s = document.createElement('div');
+                s.className = `swatch ${i === this.selectedOutfit ? 'selected' : ''}`;
+                s.style.backgroundColor = color;
+                s.onclick = () => {
+                    document.querySelectorAll('#outfit-swatches .swatch').forEach(el=>el.classList.remove('selected'));
+                    s.classList.add('selected');
+                    this.selectedOutfit = i;
+                    this.updateCreatorPreview();
+                };
+                outfits.appendChild(s);
+            });
+
+            // Hat styles
+            const hats = document.getElementById('hat-swatches');
+            HAT_COLORS.forEach((color, i) => {
+                const s = document.createElement('div');
+                s.className = `swatch ${i === this.selectedHat ? 'selected' : ''}`;
+                s.style.backgroundColor = color;
+                s.onclick = () => {
+                    document.querySelectorAll('#hat-swatches .swatch').forEach(el=>el.classList.remove('selected'));
+                    s.classList.add('selected');
+                    this.selectedHat = i;
+                    this.updateCreatorPreview();
+                };
+                hats.appendChild(s);
+            });
+        }
+
+        setupTitleScene() {
+            this.scene = new THREE.Scene();
+            
+            // Set 2D standard orthographic style view camera
+            this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+            this.camera.position.set(0, 3, 14);
+            this.camera.lookAt(0, 3, 0);
+
+            const ambient = new THREE.AmbientLight(0xffffff, 0.95);
+            this.scene.add(ambient);
+
+            // Create flat 2D layered visual backdrop
+            this.createFlatBackdrop();
+        }
+
+        createFlatBackdrop() {
+            this.swayables = [];
+            this.clouds = [];
+            this.bgHills = [];
+
+            // 1. Sky Plane
+            const skyGrad = document.createElement('canvas');
+            skyGrad.width = 128;
+            skyGrad.height = 128;
+            const ctx = skyGrad.getContext('2d');
+            const grad = ctx.createLinearGradient(0, 0, 0, 128);
+            grad.addColorStop(0, '#87CEEB'); // Light blue sky
+            grad.addColorStop(1, '#B0E0FF');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 128, 128);
+            const skyTex = new THREE.CanvasTexture(skyGrad);
+            const skyMesh = new THREE.Mesh(new THREE.PlaneGeometry(35, 20), new THREE.MeshBasicMaterial({ map: skyTex }));
+            skyMesh.position.set(0, 3, -15);
+            this.scene.add(skyMesh);
+
+            // 2. Far Hills Plane (Light green)
+            const farHillMat = new THREE.MeshBasicMaterial({ color: 0x48bb78, side: THREE.DoubleSide });
+            const farHillGeom = new THREE.PlaneGeometry(40, 10);
+            const farHill = new THREE.Mesh(farHillGeom, farHillMat);
+            farHill.position.set(0, -2, -10);
+            this.scene.add(farHill);
+            this.bgHills.push({ mesh: farHill, factor: 0.2 });
+
+            // 3. Near Hills (Darker green)
+            const nearHillMat = new THREE.MeshBasicMaterial({ color: 0x38a169, side: THREE.DoubleSide });
+            const nearHill = new THREE.Mesh(new THREE.PlaneGeometry(40, 7), nearHillMat);
+            nearHill.position.set(0, -3.5, -5);
+            this.scene.add(nearHill);
+            this.bgHills.push({ mesh: nearHill, factor: 0.5 });
+
+            // 4. Swaying trees
+            for (let i = -12; i <= 12; i += 3) {
+                const z = -2 - Math.random() * 2;
+                const tree = this.create2DTree(i, -1.8, z);
+                this.scene.add(tree);
+                this.swayables.push(tree);
+            }
+
+            // 5. Clouds
+            for (let i = 0; i < 4; i++) {
+                const cloud = this.create2DCloud();
+                cloud.position.set(-18 + i * 10, 6 + Math.random() * 2, -8);
+                this.scene.add(cloud);
+                this.clouds.push(cloud);
+            }
+        }
+
+        create2DTree(x, y, z) {
+            const group = new THREE.Group();
+            group.position.set(x, y, z);
+
+            // Trunk (flat brown rectangle)
+            const trunk = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 1.8), new THREE.MeshBasicMaterial({ color: 0x8b5a2b }));
+            trunk.position.y = 0.9;
+            group.add(trunk);
+
+            // Leaves (flat green circle)
+            const leaves = new THREE.Mesh(new THREE.CircleGeometry(0.8, 16), new THREE.MeshBasicMaterial({ color: 0x22c55e }));
+            leaves.position.set(0, 1.8, 0.01);
+            leaves.name = "leaves";
+            group.add(leaves);
+
+            return group;
+        }
+
+        create2DCloud() {
+            const group = new THREE.Group();
+            const mat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95 });
+            
+            const shape1 = new THREE.Mesh(new THREE.CircleGeometry(1.2, 16), mat);
+            group.add(shape1);
+
+            const shape2 = new THREE.Mesh(new THREE.CircleGeometry(0.8, 16), mat);
+            shape2.position.set(-1.0, -0.2, 0.01);
+            group.add(shape2);
+
+            const shape3 = new THREE.Mesh(new THREE.CircleGeometry(0.8, 16), mat);
+            shape3.position.set(1.0, -0.2, 0.01);
+            group.add(shape3);
+
+            return group;
+        }
+
+        // --- Customization Visuals ---
+        updateCreatorPreview() {
+            if (!this.previewInstance) {
+                this.previewInstance = new CharacterPreview('char-preview-container');
+            }
+            this.previewInstance.update(
+                SKIN_COLORS[this.selectedSkin],
+                OUTFIT_COLORS[this.selectedOutfit],
+                HAT_COLORS[this.selectedHat]
+            );
+        }
+
+        // --- Screen Navigations ---
+        startCreation() {
+            audio.init();
+            document.getElementById('title-screen').classList.add('hidden');
+            document.getElementById('char-screen').classList.remove('hidden');
+            this.state = 'CREATION';
+
+            // Init the preview container box character renderer
+            this.updateCreatorPreview();
+        }
+
+        updateCreatorName(val) {
+            this.charName = val.trim() || "Explorer";
+            document.getElementById('preview-name-lbl').innerText = this.charName;
+        }
+
+        backToTitle() {
+            document.getElementById('char-screen').classList.add('hidden');
+            document.getElementById('title-screen').classList.remove('hidden');
+            this.state = 'TITLE';
+            this.setupTitleScene();
+        }
+
+        beginJourney() {
+            document.getElementById('char-screen').classList.add('hidden');
+            this.currentLevelIndex = 0;
+            this.starsCollected = 0;
+            this.balloons = [];
+            this.loadLevel(this.currentLevelIndex);
+        }
+
+        // --- Game Setup / Level Loading ---
+        loadLevel(index) {
+            this.state = 'LOADING';
+            this.currentLevelIndex = index;
+            const lvl = LEVEL_DATA[index];
+
+            // Clear previous game entities
+            this.clearGameObjects();
+
+            // Set up HUD values
+            document.getElementById('hud-level-title').innerText = `Level ${lvl.id}: ${lvl.title}`;
+            document.getElementById('hud-objective').innerText = `Objective: ${lvl.objective}`;
+            document.getElementById('hud-stars').innerText = `0 / 3`;
+            this.starsCollected = 0;
+            this.factsCollected = 0;
+            
+            // Enable UI elements matching themes
+            document.getElementById('hud-temp-container').style.display = (lvl.theme === 'warm' || lvl.theme === 'ac') ? 'flex' : 'none';
+            document.getElementById('hud-humidity-container').style.display = (lvl.theme === 'humid') ? 'flex' : 'none';
+            document.getElementById('hud-health-container').style.display = (lvl.theme === 'disease') ? 'flex' : 'none';
+
+            // Show screen intro overlay
+            document.getElementById('intro-lvl-num').innerText = `LEVEL ${lvl.id}`;
+            document.getElementById('intro-lvl-title').innerText = lvl.title;
+            document.getElementById('intro-lvl-desc').innerText = lvl.desc;
+            document.getElementById('intro-overlay').classList.add('visible');
+
+            // Setup level environmental visual attributes (Flat 2D layout)
+            this.setupLevelScene(lvl);
+
+            // Set intro timeout
+            setTimeout(() => {
+                document.getElementById('intro-overlay').classList.remove('visible');
+                document.getElementById('hud-container').classList.add('visible');
+                this.state = 'PLAYING';
+                
+                // Show virtual buttons on mobile
+                if (window.innerWidth < 768) {
+                    document.getElementById('mobile-controls').style.display = 'flex';
+                }
+
+                // Trigger Osei starting talk in Level 1
+                if (lvl.id === 1) {
+                    this.triggerDialogue("Professor Osei", [
+                        `Welcome, ${this.charName}! Let's explore the warm lowlands!`,
+                        `Notice how high temperatures slow down your walking speed. Find the shaded zones to cool off!`
+                    ]);
+                }
+            }, 3000);
+        }
+
+        setupLevelScene(lvl) {
+            this.scene = new THREE.Scene();
+            
+            // Use 2D flat presentation settings
+            this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+            this.camera.position.set(2, 4, 12); // Z=12 provides a clean zoomed out 2D look
+            this.camera.lookAt(2, 4, 0);
+
+            const ambient = new THREE.AmbientLight(0xffffff, 0.95);
+            this.scene.add(ambient);
+
+            // Setup beautiful backgrounds
+            this.createFlatBackdrop();
+
+            // Load physical blocks
+            this.grid = lvl.map;
+            this.gridHeight = this.grid.length;
+            this.gridWidth = this.grid[0].length;
+
+            const blockGeo = new THREE.PlaneGeometry(1, 1);
+            const tileTex = createTileTexture(lvl.theme);
+            const blockMat = new THREE.MeshBasicMaterial({ map: tileTex, side: THREE.DoubleSide });
+
+            for (let r = 0; r < this.gridHeight; r++) {
+                for (let c = 0; c < this.gridWidth; c++) {
+                    const char = this.grid[r][c];
+                    const x = c;
+                    const y = this.gridHeight - 1 - r;
+
+                    if (char === '#') {
+                        const block = new THREE.Mesh(blockGeo, blockMat);
+                        block.position.set(x, y, 0);
+                        this.scene.add(block);
+                        this.meshes.push({ x, y, mesh: block, solid: true });
+                    } 
+                    else if (char === '=') {
+                        const plat = new THREE.Mesh(new THREE.PlaneGeometry(1, 0.25), new THREE.MeshBasicMaterial({ color: 0xd97706 }));
+                        plat.position.set(x, y + 0.375, 0.01);
+                        this.scene.add(plat);
+                        this.meshes.push({ x, y, mesh: plat, solid: true, semiSolid: true });
+                    }
+                    else if (char === '*') {
+                        // Star collectible flat plane
+                        const starCanvas = document.createElement('canvas');
+                        starCanvas.width = 64; starCanvas.height = 64;
+                        const sCtx = starCanvas.getContext('2d');
+                        sCtx.fillStyle = '#f59e0b';
+                        // Draw star
+                        sCtx.beginPath();
+                        sCtx.moveTo(32, 5); sCtx.lineTo(40, 24); sCtx.lineTo(60, 24);
+                        sCtx.lineTo(44, 36); sCtx.lineTo(50, 56); sCtx.lineTo(32, 44);
+                        sCtx.lineTo(14, 56); sCtx.lineTo(20, 36); sCtx.lineTo(4, 24);
+                        sCtx.lineTo(24, 24); sCtx.closePath(); sCtx.fill();
+                        const star = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.5), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(starCanvas), transparent: true }));
+                        star.position.set(x, y, 0.02);
+                        this.scene.add(star);
+                        this.collectibles.push({ x, y, mesh: star, type: 'star', collected: false });
+                    } 
+                    else if (char === '?') {
+                        // Fact Book plane
+                        const bookCanvas = document.createElement('canvas');
+                        bookCanvas.width = 64; bookCanvas.height = 64;
+                        const bCtx = bookCanvas.getContext('2d');
+                        bCtx.fillStyle = '#3b82f6';
+                        bCtx.fillRect(10, 10, 44, 44);
+                        bCtx.fillStyle = '#ffffff';
+                        bCtx.fillRect(18, 18, 28, 4);
+                        bCtx.fillRect(18, 28, 28, 4);
+                        const book = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.5), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(bookCanvas), transparent: true }));
+                        book.position.set(x, y, 0.02);
+                        this.scene.add(book);
+                        this.collectibles.push({ x, y, mesh: book, type: 'fact', collected: false });
+                    }
+                    else if (char === 'G') {
+                        // Portal complete
+                        const portalCanvas = document.createElement('canvas');
+                        portalCanvas.width = 64; portalCanvas.height = 64;
+                        const pCtx = portalCanvas.getContext('2d');
+                        const portalGrad = pCtx.createRadialGradient(32,32,10,32,32,30);
+                        portalGrad.addColorStop(0, '#10b981');
+                        portalGrad.addColorStop(1, '#064e3b');
+                        pCtx.fillStyle = portalGrad;
+                        pCtx.fillRect(0,0,64,64);
+                        const ring = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 1.2), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(portalCanvas), transparent: true }));
+                        ring.position.set(x, y + 0.5, 0.01);
+                        this.scene.add(ring);
+                        this.goalPosition = { x, y: y + 0.5 };
+                        this.goalMesh = ring;
+                    }
+                    else if (char === 'T') {
+                        // Shade Trees
+                        const tree = this.create2DTree(x, y + 0.4, 0.01);
+                        this.scene.add(tree);
+                        this.decorations.push({ x, y, mesh: tree, type: 'tree' });
+                    }
+                    else if (char === 'F') {
+                        // Cool wind fan
+                        const fanGroup = new THREE.Group();
+                        fanGroup.position.set(x, y, 0.01);
+                        const stand = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 1.2), new THREE.MeshBasicMaterial({ color: 0x4b5563 }));
+                        stand.position.y = 0.6;
+                        fanGroup.add(stand);
+                        const blades = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.2), new THREE.MeshBasicMaterial({ color: 0x60a5fa }));
+                        blades.position.y = 1.2;
+                        blades.name = "blades";
+                        fanGroup.add(blades);
+                        this.scene.add(fanGroup);
+                        this.decorations.push({ x, y, mesh: fanGroup, type: 'fan' });
+                    }
+                    else if (char === 'M') {
+                        // Timber wood logs
+                        const wood = new THREE.Mesh(new THREE.PlaneGeometry(0.6, 0.3), new THREE.MeshBasicMaterial({ color: 0x78350f }));
+                        wood.position.set(x, y, 0.02);
+                        this.scene.add(wood);
+                        this.collectibles.push({ x, y, mesh: wood, type: 'wood', collected: false });
+                    }
+                    else if (char === 'D') {
+                        // Diplomatic package letter
+                        const letter = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.3), new THREE.MeshBasicMaterial({ color: 0xfef08a }));
+                        letter.position.set(x, y, 0.02);
+                        this.scene.add(letter);
+                        this.collectibles.push({ x, y, mesh: letter, type: 'diplomacy', collected: false });
+                    }
+                    else if (char === 'A') {
+                        // AC Units
+                        const ac = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.6), new THREE.MeshBasicMaterial({ color: 0xe5e7eb }));
+                        ac.position.set(x, y, 0.01);
+                        this.scene.add(ac);
+                        this.decorations.push({ x, y, mesh: ac, type: 'ac_unit', activated: false });
+                    }
+                    else if (char === 'S') {
+                        // Switch button
+                        const sw = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 0.15), new THREE.MeshBasicMaterial({ color: 0xef4444 }));
+                        sw.position.set(x, y - 0.42, 0.02);
+                        this.scene.add(sw);
+                        this.decorations.push({ x, y, mesh: sw, type: 'ac_switch', activated: false });
+                    }
+                }
+            }
+
+            // Spawn Game Player Mesh (Flat 2D composite character)
+            this.gameCharacter = draw2DCharacterMesh(
+                SKIN_COLORS[this.selectedSkin],
+                OUTFIT_COLORS[this.selectedOutfit],
+                HAT_COLORS[this.selectedHat]
+            );
+            this.scene.add(this.gameCharacter);
+            this.playerX = 2;
+            this.playerY = 3;
+            this.playerVx = 0;
+            this.playerVy = 0;
+
+            this.camera.position.set(this.playerX, this.playerY + 1.5, 12);
+            
+            this.spawnActiveBalloons();
+            this.spawnLevelNPCs(lvl);
+            this.setupParticles(lvl.theme);
+        }
+
+        spawnActiveBalloons() {
+            const count = this.currentLevelIndex;
+            this.balloons = [];
+            for (let i = 0; i < count; i++) {
+                const balloon = {
+                    x: this.playerX - 1.2 - i * 0.4,
+                    y: this.playerY + 2.0,
+                    vx: 0,
+                    vy: 0,
+                    levelNum: i + 1,
+                    color: `hsl(${i * 45}, 85%, 65%)`
+                };
+                
+                // 2D sphere representation
+                const bMesh = new THREE.Group();
+                const circle = new THREE.Mesh(new THREE.CircleGeometry(0.35, 16), new THREE.MeshBasicMaterial({ color: balloon.color }));
+                bMesh.add(circle);
+                
+                // Connection line
+                const line = new THREE.Mesh(new THREE.PlaneGeometry(0.02, 1.2), new THREE.MeshBasicMaterial({ color: 0xcccccc }));
+                line.position.y = -0.6;
+                bMesh.add(line);
+
+                this.scene.add(bMesh);
+                balloon.mesh = bMesh;
+                this.balloons.push(balloon);
+            }
+        }
+
+        spawnLevelNPCs(lvl) {
+            if (lvl.id === 1) {
+                // Professor Osei
+                const osei = draw2DCharacterMesh("#ffd3b6", "#16a34a", "#7c3aed");
+                osei.position.set(4, 1.2, 0.02);
+                this.scene.add(osei);
+                this.npcs.push({ mesh: osei, x: 4, name: "Professor Osei", racing: true, progress: 4 });
+            }
+            else if (lvl.id === 3) {
+                const farmer = draw2DCharacterMesh("#8c5638", "#ca8a04", "#7c3aed");
+                farmer.position.set(22, 1.2, 0.02);
+                this.scene.add(farmer);
+                this.npcs.push({ mesh: farmer, x: 22, name: "Sick Farmer", talk: "Cough... malaria vectors thrive in stagnant water pools here. Medicine is essential to treat it." });
+            }
+            else if (lvl.id === 6) {
+                const merchant = draw2DCharacterMesh("#e5b084", "#0d9488", "#2563eb");
+                merchant.position.set(12, 1.2, 0.02);
+                this.scene.add(merchant);
+                this.npcs.push({ mesh: merchant, x: 12, name: "Stranded Merchant", talk: "Broken bridges halt transport networks! Trade falls to zero. Collect Timber logs to construct this pass." });
+            }
+            else if (lvl.id === 7) {
+                const chief1 = draw2DCharacterMesh("#a8724d", "#7c3aed", "#e11d48");
+                chief1.position.set(13, 1.2, 0.02);
+                this.scene.add(chief1);
+                this.npcs.push({ mesh: chief1, x: 13, name: "Valley Chief A", talk: "Mountains isolate us from valley B. We speak different dialects and mistrust them! Please carry our letter." });
+
+                const chief2 = draw2DCharacterMesh("#a8724d", "#dc2626", "#334155");
+                chief2.position.set(45, 1.2, 0.02);
+                this.scene.add(chief2);
+                this.npcs.push({ mesh: chief2, x: 45, name: "Valley Chief B", talk: "Mistrust creates conflict events. We need open pathways and letters to resolve our issues." });
+            }
+            else if (lvl.id === 9) {
+                const citizen = draw2DCharacterMesh("#ffd3b6", "#db2777", "#ea580c");
+                citizen.position.set(10, 1.2, 0.02);
+                this.scene.add(citizen);
+                this.npcs.push({ mesh: citizen, x: 10, name: "Idle Citizen", talk: "It's too warm to focus or think... I feel lazy. We need air conditioning to cool down!" });
+            }
+        }
+
+        setupParticles(theme) {
+            this.particles = [];
+            if (theme === 'disease') {
+                for (let i = 0; i < 40; i++) {
+                    const mosquito = new THREE.Mesh(new THREE.CircleGeometry(0.04, 8), new THREE.MeshBasicMaterial({ color: 0xff0000 }));
+                    mosquito.position.set(10 + Math.random() * 60, 2 + Math.random() * 4, 0.05);
+                    this.scene.add(mosquito);
+                    this.particles.push({ mesh: mosquito, type: 'mosquito', vx: (Math.random() - 0.5) * 0.05, vy: (Math.random() - 0.5) * 0.05 });
+                }
+            } 
+            else if (theme === 'frost') {
+                for (let i = 0; i < 60; i++) {
+                    const snowflake = new THREE.Mesh(new THREE.CircleGeometry(0.05, 8), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 }));
+                    snowflake.position.set(Math.random() * 80, 2 + Math.random() * 10, 0.05);
+                    this.scene.add(snowflake);
+                    this.particles.push({ mesh: snowflake, type: 'snowflake', vy: -0.02 - Math.random() * 0.03 });
+                }
+            }
+        }
+
+        clearGameObjects() {
+            if (this.scene) {
+                while(this.scene.children.length > 0){ 
+                    this.scene.remove(this.scene.children[0]); 
+                }
+            }
+            this.meshes = [];
+            this.swayables = [];
+            this.npcs = [];
+            this.collectibles = [];
+            this.decorations = [];
+            this.particles = [];
+        }
+
+        // --- Dialog System & Interactive Fact popups ---
+        triggerDialogue(speaker, textArray, callback = null) {
+            this.state = 'DIALOGUE';
+            this.dialogueQueue = textArray;
+            this.dialogueCallback = callback;
+            document.getElementById('dialogue-speaker').innerText = speaker;
+            
+            this.nextDialogue();
+            document.getElementById('dialogue-overlay').classList.add('visible');
+        }
+
+        nextDialogue() {
+            if (this.dialogueQueue.length === 0) {
+                document.getElementById('dialogue-overlay').classList.remove('visible');
+                this.state = 'PLAYING';
+                if (this.dialogueCallback) this.dialogueCallback();
+                return;
+            }
+            const text = this.dialogueQueue.shift();
+            document.getElementById('dialogue-text').innerText = text;
+        }
+
+        showFactPopup(lvl) {
+            this.state = 'FACT';
+            document.getElementById('fact-icon').innerText = lvl.factIcon;
+            document.getElementById('fact-title').innerText = lvl.factTitle;
+            document.getElementById('fact-text').innerText = lvl.factText;
+
+            // Generate interactive comparison chart (neal.fun style)
+            const container = document.getElementById('fact-visual-content');
+            container.innerHTML = '';
+
+            lvl.comparisonLabels.forEach((label, i) => {
+                const row = document.createElement('div');
+                row.className = 'comparison-bar-container';
+
+                const lbl = document.createElement('div');
+                lbl.className = 'comparison-label';
+                lbl.innerText = label;
+                row.appendChild(lbl);
+
+                const track = document.createElement('div');
+                track.className = 'comparison-track';
+
+                const fill = document.createElement('div');
+                fill.className = 'comparison-fill';
+                // Color ramp
+                let fillCol = '#10b981'; // Green
+                if (lvl.theme === 'warm') fillCol = i === 2 ? '#ef4444' : i === 1 ? '#f59e0b' : '#10b981';
+                else if (lvl.theme === 'humid') fillCol = i === 2 ? '#ef4444' : '#10b981';
+                else if (lvl.theme === 'disease') fillCol = i === 2 ? '#ef4444' : '#10b981';
+
+                fill.style.backgroundColor = fillCol;
+                fill.style.width = '0%';
+                fill.innerText = `0 ${lvl.comparisonSuffix}`;
+
+                track.appendChild(fill);
+                row.appendChild(track);
+                container.appendChild(row);
+
+                setTimeout(() => {
+                    fill.style.width = `${Math.min(100, (lvl.comparisonValues[i] / Math.max(...lvl.comparisonValues)) * 100)}%`;
+                    fill.innerText = `${lvl.comparisonValues[i]} ${lvl.comparisonSuffix}`;
+                }, 100);
+            });
+
+            document.getElementById('fact-overlay').classList.add('visible');
+        }
+
+        closeFact() {
+            document.getElementById('fact-overlay').classList.remove('visible');
+            this.state = 'PLAYING';
+            audio.playCollect();
+        }
+
+        // --- Physics & Gameplay Loop updates ---
+        updatePhysics() {
+            const gravity = 0.016;
+            const friction = 0.85;
+
+            const lvl = LEVEL_DATA[this.currentLevelIndex];
+            if (lvl.theme === 'warm') {
+                let inShade = false;
+                this.decorations.forEach(d => {
+                    if (d.type === 'tree' && Math.abs(this.playerX - d.x) < 1.0) {
+                        inShade = true;
+                    }
+                });
+
+                if (inShade) {
+                    this.playerTemp = Math.max(15, this.playerTemp - 0.2);
+                } else {
+                    this.playerTemp = Math.min(42, this.playerTemp + 0.08);
+                }
+
+                const pctHeat = Math.max(0, (this.playerTemp - 15) / 27);
+                this.currentSpeed = this.baseSpeed * (1.0 - pctHeat * 0.45);
+                document.getElementById('hud-temp-val').innerText = Math.round(this.playerTemp);
+                document.getElementById('hud-temp-bar').style.width = `${Math.min(100, ((this.playerTemp - 15) / 27) * 100)}%`;
+            } 
+            else if (lvl.theme === 'humid') {
+                let nearFan = false;
+                this.decorations.forEach(d => {
+                    if (d.type === 'fan' && Math.abs(this.playerX - d.x) < 1.2 && Math.abs(this.playerY - d.y) < 2.0) {
+                        nearFan = true;
+                    }
+                });
+
+                if (nearFan) {
+                    this.playerHumidity = Math.max(20, this.playerHumidity - 0.6);
+                } else {
+                    if (Math.abs(this.playerVx) > 0.02) {
+                        this.playerHumidity = Math.min(100, this.playerHumidity + 0.15);
+                    } else {
+                        this.playerHumidity = Math.max(20, this.playerHumidity - 0.05);
+                    }
+                }
+
+                const speedMult = 1.0 - (this.playerHumidity / 100) * 0.5;
+                this.currentSpeed = this.baseSpeed * speedMult;
+                document.getElementById('hud-humidity-val').innerText = Math.round(this.playerHumidity);
+            }
+            else if (lvl.theme === 'disease') {
+                this.particles.forEach(p => {
+                    if (p.type === 'mosquito') {
+                        const dist = Math.sqrt(Math.pow(this.playerX - p.mesh.position.x, 2) + Math.pow(this.playerY - p.mesh.position.y, 2));
+                        if (dist < 0.7) {
+                            this.playerHealth = Math.max(20, this.playerHealth - 0.15);
+                            audio.playHurt();
+                        }
+                    }
+                });
+                document.getElementById('hud-health-val').innerText = Math.round(this.playerHealth);
+                document.getElementById('hud-health-bar').style.width = `${this.playerHealth}%`;
+            }
+
+            let moveLeft = this.keys['ArrowLeft'] || this.keys['KeyA'];
+            let moveRight = this.keys['ArrowRight'] || this.keys['KeyD'];
+            let jumpPressed = this.keys['ArrowUp'] || this.keys['KeyW'] || this.keys['Space'];
+
+            if (moveLeft) {
+                this.playerVx -= 0.015;
+                this.facingRight = false;
+            } else if (moveRight) {
+                this.playerVx += 0.015;
+                this.facingRight = true;
+            } else {
+                this.playerVx *= friction;
+            }
+
+            this.playerVx = Math.max(-this.currentSpeed, Math.min(this.currentSpeed, this.playerVx));
+            this.playerVy -= gravity;
+
+            let targetX = this.playerX + this.playerVx;
+            let targetY = this.playerY + this.playerVy;
+
+            let onGround = false;
+
+            this.meshes.forEach(b => {
+                if (!b.solid) return;
+
+                // Collide Y
+                if (targetX + 0.35 > b.x - 0.5 && targetX - 0.35 < b.x + 0.5) {
+                    if (this.playerY - 0.45 >= b.y + 0.5 && targetY - 0.45 < b.y + 0.5) {
+                        targetY = b.y + 0.5 + 0.45;
+                        this.playerVy = 0;
+                        onGround = true;
+                    } 
+                    else if (!b.semiSolid && this.playerY + 1.4 <= b.y - 0.5 && targetY + 1.45 > b.y - 0.5) {
+                        targetY = b.y - 0.5 - 1.45;
+                        this.playerVy = 0;
+                    }
+                }
+
+                // Collide X
+                if (!b.semiSolid && targetY + 1.4 > b.y - 0.5 && targetY - 0.45 < b.y + 0.5) {
+                    if (this.playerX - 0.35 >= b.x + 0.5 && targetX - 0.35 < b.x + 0.5) {
+                        targetX = b.x + 0.5 + 0.35;
+                        this.playerVx = 0;
+                    } 
+                    else if (this.playerX + 0.35 <= b.x - 0.5 && targetX + 0.35 > b.x - 0.5) {
+                        targetX = b.x - 0.5 - 0.35;
+                        this.playerVx = 0;
+                    }
+                }
+            });
+
+            this.playerX = targetX;
+            this.playerY = targetY;
+
+            if (this.playerY < -2) {
+                this.playerX = 2;
+                this.playerY = 3;
+                this.playerVx = 0;
+                this.playerVy = 0;
+                audio.playHurt();
+            }
+
+            this.isGrounded = onGround;
+            if (this.isGrounded) {
+                this.coyoteTime = 5;
+            } else {
+                this.coyoteTime = Math.max(0, this.coyoteTime - 1);
+            }
+
+            if (jumpPressed) {
+                this.jumpBuffered = 5;
+            } else {
+                this.jumpBuffered = Math.max(0, this.jumpBuffered - 1);
+            }
+
+            if (this.jumpBuffered > 0 && this.coyoteTime > 0) {
+                this.playerVy = 0.32;
+                this.isGrounded = false;
+                this.coyoteTime = 0;
+                this.jumpBuffered = 0;
+                audio.playJump();
+            }
+
+            this.gameCharacter.position.set(this.playerX, this.playerY, 0.05);
+            this.gameCharacter.rotation.y = this.facingRight ? 0 : Math.PI;
+
+            // Character leg animations (Sway legs on walk)
+            const walkCycle = Math.sin(this.playerX * 8) * 0.4;
+            const leftLeg = this.gameCharacter.getObjectByName("leftLeg");
+            const rightLeg = this.gameCharacter.getObjectByName("rightLeg");
+
+            if (Math.abs(this.playerVx) > 0.01) {
+                if (leftLeg) leftLeg.rotation.z = walkCycle;
+                if (rightLeg) rightLeg.rotation.z = -walkCycle;
+            } else {
+                if (leftLeg) leftLeg.rotation.z = 0;
+                if (rightLeg) rightLeg.rotation.z = 0;
+            }
+
+            // Sync balloons
+            let leadX = this.playerX;
+            let leadY = this.playerY + 1.2;
+            this.balloons.forEach((b, index) => {
+                const targetBX = leadX - (this.facingRight ? 0.8 : -0.8) - index * 0.25;
+                const targetBY = leadY + 0.5 + Math.sin(Date.now() * 0.002 + index) * 0.15;
+
+                const dx = targetBX - b.x;
+                const dy = targetBY - b.y;
+
+                b.vx += dx * 0.08;
+                b.vy += dy * 0.08;
+                b.vx *= 0.85;
+                b.vy *= 0.85;
+
+                b.x += b.vx;
+                b.y += b.vy;
+                b.mesh.position.set(b.x, b.y, 0.03);
+
+                leadX = b.x;
+                leadY = b.y;
+            });
+
+            // Smooth 2D Parallax follow camera
+            const targetCamX = this.playerX + (this.facingRight ? 1.5 : -1.5);
+            const targetCamY = this.playerY + 1.2;
+            this.camera.position.x += (targetCamX - this.camera.position.x) * 0.08;
+            this.camera.position.y += (targetCamY - this.camera.position.y) * 0.08;
+
+            // Update parallax backgrounds plane coordinates
+            this.bgHills.forEach(hill => {
+                hill.mesh.position.x = this.camera.position.x * hill.factor;
+            });
+
+            // Check Collectibles
+            this.collectibles.forEach(c => {
+                if (c.collected) return;
+                const dist = Math.sqrt(Math.pow(this.playerX - c.x, 2) + Math.pow(this.playerY - c.y, 2));
+                if (dist < 0.8) {
+                    c.collected = true;
+                    this.scene.remove(c.mesh);
+                    audio.playCollect();
+
+                    if (c.type === 'star') {
+                        this.starsCollected++;
+                        document.getElementById('hud-stars').innerText = `${this.starsCollected} / 3`;
+                    } 
+                    else if (c.type === 'fact') {
+                        this.factsCollected++;
+                        this.showFactPopup(lvl);
+                    }
+                    else if (c.type === 'wood') {
+                        this.factsCollected++;
+                        this.triggerDialogue("System", ["You collected timber! Bring it to the blueprint outline to construct the pass bridge."]);
+                    }
+                    else if (c.type === 'diplomacy') {
+                        this.factsCollected++;
+                        this.triggerDialogue("System", ["Diplomatic letter secured. Climb up to deliver it to the next community."]);
+                    }
+                }
+            });
+
+            // Check Activations
+            this.decorations.forEach(d => {
+                if (d.type === 'ac_switch' && !d.activated) {
+                    const dist = Math.sqrt(Math.pow(this.playerX - d.x, 2) + Math.pow(this.playerY - d.y, 2));
+                    if (dist < 0.8 && this.playerVy < 0) {
+                        d.activated = true;
+                        d.mesh.position.y -= 0.05;
+                        audio.playSwitch();
+                        
+                        this.decorations.forEach(ac => {
+                            if (ac.type === 'ac_unit' && !ac.activated && Math.abs(ac.x - d.x) < 8) {
+                                ac.activated = true;
+                                ac.mesh.material.color.setHex(0x60a5fa);
+                                this.playerTemp = Math.max(15, this.playerTemp - 10);
+                                this.triggerDialogue("City Resident", ["The air conditioning is running! Ambition returns, and manual work speed is doubled!"]);
+                            }
+                        });
+                    }
+                }
+            });
+
+            // Prof Osei
+            this.npcs.forEach(npc => {
+                if (npc.racing) {
+                    if (npc.progress < this.playerX + 5) {
+                        npc.progress += 0.06;
+                    }
+                    npc.mesh.position.x = npc.progress;
+                }
+            });
+
+            // Portal
+            if (this.goalPosition) {
+                const distToGoal = Math.sqrt(Math.pow(this.playerX - this.goalPosition.x, 2) + Math.pow(this.playerY - this.goalPosition.y, 2));
+                if (distToGoal < 1.0) {
+                    this.completeLevel();
+                }
+            }
+        }
+
+        completeLevel() {
+            this.state = 'COMPLETE';
+            audio.playWin();
+
+            document.getElementById('complete-summary').innerText = `You completed: ${LEVEL_DATA[this.currentLevelIndex].title}`;
+            document.getElementById('balloon-award-val').innerText = this.currentLevelIndex + 1;
+            document.getElementById('stat-stars').innerText = `${this.starsCollected} / 3`;
+            document.getElementById('stat-facts').innerText = `${this.factsCollected} / 2`;
+
+            document.getElementById('complete-overlay').classList.add('visible');
+            document.getElementById('hud-container').classList.remove('visible');
+        }
+
+        nextLevel() {
+            document.getElementById('complete-overlay').classList.remove('visible');
+            if (this.currentLevelIndex + 1 < LEVEL_DATA.length) {
+                this.loadLevel(this.currentLevelIndex + 1);
+            } else {
+                this.showCredits();
+            }
+        }
+
+        showCredits() {
+            this.state = 'CREDITS';
+            document.getElementById('player-credits-name').innerText = this.charName;
+            document.getElementById('credits-overlay').classList.add('visible');
+        }
+
+        toggleAudio() {
+            const isMuted = audio.toggle();
+            const btn = document.getElementById('sound-btn');
+            btn.innerHTML = isMuted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
+        }
+
+        setupMobileControls() {
+            const bindBtn = (id, key) => {
+                const btn = document.getElementById(id);
+                btn.addEventListener('touchstart', (e) => { e.preventDefault(); this.keys[key] = true; });
+                btn.addEventListener('touchend', (e) => { e.preventDefault(); this.keys[key] = false; });
+            };
+
+            bindBtn('mbtn-left', 'ArrowLeft');
+            bindBtn('mbtn-right', 'ArrowRight');
+            bindBtn('mbtn-jump', 'Space');
+            
+            document.getElementById('mbtn-interact').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (this.state === 'DIALOGUE') this.nextDialogue();
+            });
+        }
+
+        // --- Core Animation Loops ---
+        animate() {
+            requestAnimationFrame(() => this.animate());
+
+            const time = Date.now() * 0.001;
+
+            // Sway background trees
+            this.swayables.forEach((s, idx) => {
+                const leaves = s.getObjectByName("leaves");
+                if (leaves) {
+                    leaves.rotation.z = Math.sin(time + idx) * 0.08;
+                }
+            });
+
+            // Cloud drift wraps
+            this.clouds.forEach(c => {
+                c.position.x += 0.005;
+                if (c.position.x > 20) {
+                    c.position.x = -20;
+                }
+            });
+
+            // Animate items
+            this.collectibles.forEach(c => {
+                if (c.mesh) {
+                    c.mesh.rotation.y += 0.02;
+                    c.mesh.position.y = c.y + Math.sin(time * 3 + c.x) * 0.08;
+                }
+            });
+
+            if (this.goalMesh) {
+                this.goalMesh.rotation.z += 0.02;
+            }
+
+            // Fan spin
+            this.decorations.forEach(d => {
+                if (d.type === 'fan') {
+                    const blades = d.mesh.getObjectByName("blades");
+                    if (blades) {
+                        blades.rotation.z += 0.25;
+                    }
+                }
+            });
+
+            // Particles
+            this.particles.forEach(p => {
+                if (p.type === 'mosquito') {
+                    p.mesh.position.x += p.vx + Math.sin(time * 10 + p.mesh.position.y) * 0.02;
+                    p.mesh.position.y += p.vy + Math.cos(time * 10 + p.mesh.position.x) * 0.02;
+                } 
+                else if (p.type === 'snowflake') {
+                    p.mesh.position.y += p.vy;
+                    p.mesh.position.x += Math.sin(time + p.mesh.position.y) * 0.01;
+                    if (p.mesh.position.y < -1) {
+                        p.mesh.position.y = 8 + Math.random() * 2;
+                    }
+                }
+            });
+
+            if (this.state === 'PLAYING' || this.state === 'DIALOGUE') {
+                this.updatePhysics();
+            }
+
+            if (this.renderer && this.scene && this.camera) {
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+    }
+
+    const game = new Game();
+    window.onload = () => game.init();
+
+</script>
+</body>
+</html>
